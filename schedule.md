@@ -7,6 +7,8 @@ The following document is a provisionary/preliminary schedule for cprein19's SYE
 2. Add auto-complete support for snail in VSCode.
 
 3. Implement and release an IDE style debugger for Snail as an exentsion in VSCode.
+    a. Fall Debugger Goal: Implement breakpoint support
+    b. Spring Debugger Goal: Add support for step into, step through, read values.
 
 ## Learning Goals
 
@@ -24,7 +26,7 @@ September
     - [EOF messages](https://github.com/snail-language/snail/issues/13) (Parser)
     - [Array Access store issue](https://github.com/snail-language/snail/issues/31) (Interpreter)
 
-    - is [this](https://github.com/snail-language/snail-language.github.io/issues/1) error still existing?
+    - Investigate [this](https://github.com/snail-language/snail-language.github.io/issues/1) issue
 - Learn about syntax highlighting in VSCode
    - [VSCode Syntax Highlighting Docs](https://code.visualstudio.com/api/language-extensions/syntax-highlight-guide)
    - [VSCode Language support blog](https://www.codemag.com/article/1809051/Writing-Your-Own-Debugger-and-Language-Extensions-with-Visual-Studio-Code)
@@ -39,17 +41,16 @@ October
     - Play around with [Mock Debugger](https://code.visualstudio.com/api/extension-guides/debugger-extension#the-mock-debug-extension) to see what we're shooting for 
     - [VSCode Language support blog](https://www.codemag.com/article/1809051/Writing-Your-Own-Debugger-and-Language-Extensions-with-Visual-Studio-Code)
 
-From what I am reading, a VSCode debugging extension is an intermediary between a standalone debugger and the vscode debug extension api. Will I be creating a gdb style debugger first, then linking it to vscode? If so, how do I ensure that it supports debugging on mac, windows, etc., not just my mac machine?
-
 November
+- TBD, depending on how implementation goes we will have a better sense of how to build this debugger.
 
 December
 
-**December 16th** Last day of Classes
+**December 16th** Last day of Fall Classes
 
 January
 
-**January 18th** First day of Classes
+**January 18th** First day of Spring Classes
 
 February
 - Link debugger to VSCode
@@ -59,6 +60,8 @@ February
 March
 
 April
+
+**April 15th** Feature Lock-In
 - Publish debugger extension
     - [Publishing extensions](https://code.visualstudio.com/api/working-with-extensions/publishing-extension)
 
