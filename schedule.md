@@ -31,6 +31,10 @@ September
    - [VSCode Syntax Highlighting Docs](https://code.visualstudio.com/api/language-extensions/syntax-highlight-guide)
    - [VSCode Language support blog](https://www.codemag.com/article/1809051/Writing-Your-Own-Debugger-and-Language-Extensions-with-Visual-Studio-Code)
 - Implement syntax highlighting for snail in VSCode
+   - [Writing a TextMate Grammar](https://www.apeth.com/nonblog/stories/textmatebundle.html)
+   - [Yo Code tutorial](https://www.youtube.com/watch?v=5msZv-nKebI)
+   - [Trials of building syntax highlighting blog](https://dev.to/alexantra/i-built-my-own-vs-code-syntax-highlighter-from-scratch-and-here-s-what-i-learned-1h98)
+   - [SNAIL BNF docs](https://snail-language.github.io/docs/syntax)
 
 October
 - Learn about auto-complete support in VSCode
