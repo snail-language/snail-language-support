@@ -1,0 +1,25 @@
+{
+  "name": "snail-language-support",
+  "displayName": "Snail Language Support",
+  "description": "Extension providing useful language support for the Snail programming language",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.71.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [{
+      "id": "snail",
+      "aliases": ["Snail", "snail"],
+      "extensions": [".sl"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "snail",
+      "scopeName": "source.sl",
+      "path": "./syntaxes/snail.tmLanguage.json"
+    }]
+  }
+}
