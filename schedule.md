@@ -35,6 +35,10 @@ September
    - [Yo Code tutorial](https://www.youtube.com/watch?v=5msZv-nKebI)
    - [Trials of building syntax highlighting blog](https://dev.to/alexantra/i-built-my-own-vs-code-syntax-highlighter-from-scratch-and-here-s-what-i-learned-1h98)
    - [SNAIL BNF docs](https://snail-language.github.io/docs/syntax)
+   - [FSharp TextMate Grammar](http://hoomla.se/TextmateFSharpGrammar.html)
+   - [TextMate Regex Specs](https://macromates.com/manual/en/regular_expressions)
+   - [Testing TextMate Regex](https://rubular.com/)
+   - [TextMate Grammar Docs](https://macromates.com/manual/en/language_grammars)
 
 October
 - Learn about auto-complete support in VSCode
