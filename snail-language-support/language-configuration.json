@@ -13,11 +13,11 @@
     ],
     // symbols that are auto closed when typing
     "autoClosingPairs": [
-        ["{", "}"],
-        ["[", "]"],
-        ["(", ")"],
-        ["\"", "\""],
-        ["'", "'"]
+        {"open": "{","close": "}"},
+        {"open": "[", "close": "]"},
+        {"open": "(", "close":")"},
+        {"open": "\"", "close": "\"", "notIn": ["comment", "string"]},
+        {"open": "'", "close": "'", "notIn": ["comment", "string"]}
     ],
     // symbols that can be used to surround a selection
     "surroundingPairs": [
@@ -26,5 +26,11 @@
         ["(", ")"],
         ["\"", "\""],
         ["'", "'"]
-    ]
+    ],
+    "folding": {
+        "markers": {
+            "start": "^.*{\\s*\\b",
+            "end": "^.*}\\s*"
+        }
+    }
 }
