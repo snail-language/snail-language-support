@@ -39,6 +39,7 @@ September
    - [TextMate Regex Specs](https://macromates.com/manual/en/regular_expressions)
    - [Testing TextMate Regex](https://rubular.com/)
    - [TextMate Grammar Docs](https://macromates.com/manual/en/language_grammars)
+   - [Ruby Style Regex Syntax](https://macromates.com/manual/en/regular_expressions#syntax_oniguruma)
 
 October
 - Learn about auto-complete support in VSCode
