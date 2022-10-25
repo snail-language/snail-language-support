@@ -1,0 +1,39 @@
+{
+	"if": {
+		"prefix": "if",
+		"body": [
+			"if ($1) {",
+			"\t$2",
+			"} else {",
+			"\t$3",
+			"};"
+		],
+		"description": "An if-else conditional"
+	},
+	"class": {
+		"prefix": "class",
+		"body": [
+			"class $1 {",
+			"\t$0",
+			"};"
+		]
+	},
+	"main": {
+		"prefix": ["class M", "class m", "main", "Main"],
+		"body": [
+			"class Main {",
+			"\n\tmain() {",
+			"\t\t$0",
+			"\t};\n",
+			"};"
+		]
+	},
+	"method": {
+		"prefix": ["method"],
+		"body": [
+			"${1:method_name}($2) {",
+			"\t$0",
+			"};"
+		]
+	}
+}

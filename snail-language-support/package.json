@@ -7,7 +7,7 @@
     "vscode": "^1.71.0"
   },
   "categories": [
-    "Programming Languages"
+    "Programming Languages", "Snippets"
   ],
   "contributes": {
     "languages": [{
@@ -20,6 +20,10 @@
       "language": "snail",
       "scopeName": "source.sl",
       "path": "./syntaxes/snail.tmLanguage.json"
+    }],
+    "snippets": [{
+      "language": "snail",
+      "path": "./snippets/snippets.json"
     }]
   }
 }

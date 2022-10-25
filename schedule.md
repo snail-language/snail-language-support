@@ -44,11 +44,11 @@ September
 October
 - Learn about auto-complete support in VSCode
     - [VSCode Language Configuration Docs](https://code.visualstudio.com/api/language-extensions/language-configuration-guide)
-    - [VSCode Language support blog](https://www.codemag.com/article/1809051/Writing-Your-Own-Debugger-and-Language-Extensions-with-Visual-Studio-Code)
 - Implement Language configuration in VSCode
 - Start our DEBUGGER!
     - Play around with [Mock Debugger](https://code.visualstudio.com/api/extension-guides/debugger-extension#the-mock-debug-extension) to see what we're shooting for 
     - [VSCode Language support blog](https://www.codemag.com/article/1809051/Writing-Your-Own-Debugger-and-Language-Extensions-with-Visual-Studio-Code)
+    - [C/C++ Debugger Source Code](https://github.com/microsoft/vscode-cpptools/tree/main/Extension/src)
 
 November
 - TBD, depending on how implementation goes we will have a better sense of how to build this debugger.
