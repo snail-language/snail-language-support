@@ -25,7 +25,7 @@
 		"classes": {
 			"patterns": [
 				{
-					"match": "(class)\\s([a-zA-z_0-9]+)\\s(:\\s[a-zA-z_0-9]+)?\\s",
+					"match": "(?i)(class)\\s([a-zA-z_0-9]+)\\s*(:\\s*[a-zA-z_0-9]+)?\\s*",
 					"captures": {
 						"1": { "name": "storage.type.class.snail"},
 						"2": { "name": "entity.name.class.snail"}
@@ -52,7 +52,7 @@
 					"end": "\\)"
 				},
 				{
-					"begin": "\\b(let)\\s([a-zA-Z_0-9]+)\\b(=)?\\b",
+					"begin": "\\b(?i)(let)\\s([a-zA-Z_0-9]+)\\b(=)?\\b",
 					"beginCaptures": {
 						"1": { "name": "storage.type.variable.snail"},
 						"2": { "name": "variable.name.other.snail"}
