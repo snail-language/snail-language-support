@@ -10,10 +10,26 @@
 		],
 		"description": "An if-else conditional"
 	},
+	"while": {
+		"prefix": "while",
+		"body": [
+			"while ($1) {",
+			"\t$0",
+			"};"
+		]
+	},
 	"class": {
 		"prefix": "class",
 		"body": [
 			"class $1 {",
+			"\t$0",
+			"};"
+		]
+	},
+	"class-inherits": {
+		"prefix": "class-inherits",
+		"body": [
+			"class $1 : $2 {",
 			"\t$0",
 			"};"
 		]
@@ -28,12 +44,34 @@
 			"};"
 		]
 	},
-	"method": {
-		"prefix": ["method"],
+	"main-inherits": {
+		"prefix": ["main-inherits", "Main-inherits"],
+		"body": [
+			"class Main : $1 {",
+			"\n\tmain() {",
+			"\t\t$0",
+			"\t};\n",
+			"};"
+		]
+	},
+	"method-def": {
+		"prefix": ["method-def"],
 		"body": [
 			"${1:method_name}($2) {",
 			"\t$0",
 			"};"
+		]
+	},
+	"let": {
+		"prefix": "let",
+		"body": [
+			"let $1;"
+		]
+	},
+	"let-def": {
+		"prefix": "let-def",
+		"body": [
+			"let $1 = $2;"
 		]
 	}
 }

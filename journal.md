@@ -33,3 +33,28 @@ wtf is autocomplete you may ask? [Snippets!](https://code.visualstudio.com/api/l
 You basically give a string that matches a "shortcut" that you want to use, and then an array of lines that you want to insert when you type the shortcut. I've got it in `snippets/snippets.json`. 
 
 In testing out the snippets I found a small bug in syntax highlighting. Syntax highlighting doesn't highlight classes that don't inherit, like `class Main { ... }` doesn't highlight Main as a class.
+
+## 10/27/2022
+
+Today, want to refine the method snippet (maybe get it to match regex) and and look at previous non-inherit syntax highlighting issue. 
+
+Fixed small non-inherit issue, just a small regex fix (allow 0 or more whitespace in some spots).
+
+grumble, if-else highlighting is not working inside of classes and methods (not anymore, just fixed)
+
+OK, so findings for today include:
+- autocomplete for ';' is a lot harder than it seems: lots of separate extensions exist in vscode to offer that capability
+- snippets don't match regex (which makes method def and method call autocomplete kinda super difficult)
+- semantic highlighting has nothing to do with underlining
+    - and also doesn't make sense to me: example semantic highlight providers look like they just work, I don't see how they define grammar parsing for a language
+
+Current development points for the extension
+- folding does not work (just goes based on indentation)
+- no autocomplete for ';'
+
+## 10/28/2022
+
+Today, met with Kevin. Made a few changes to snippets to incorporate while loops, class inheritance, let. Plan moving forward is to implement a language server to do parsing in order to get static error checking.
+- Like, essentially having the language server run snail in the background and see if it gets any parse errors back.
+- [LSP docs](https://code.visualstudio.com/api/language-extensions/language-server-extension-guide#implementing-a-language-server)
+- [Cool Repo (with LSP implemented)](https://github.com/dynaroars/COOL-Language-Support)

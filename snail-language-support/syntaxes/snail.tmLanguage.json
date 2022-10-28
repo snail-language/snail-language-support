@@ -163,6 +163,9 @@
 			"begin": "{",
 			"patterns": [
 				{
+					"include": "$self"
+				},
+				{
 					"include": "#comments"
 				},
 				{

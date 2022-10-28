@@ -44,7 +44,11 @@ September
 October
 - Learn about auto-complete support in VSCode
     - [VSCode Language Configuration Docs](https://code.visualstudio.com/api/language-extensions/language-configuration-guide)
+    - [VSCode snippets](https://code.visualstudio.com/docs/editor/userdefinedsnippets)
+    - [VSCode snippets in extensions](https://code.visualstudio.com/api/language-extensions/snippet-guide#using-textmate-snippets)
+    - [Some Example Java Snippets in VSCode](https://github.com/redhat-developer/vscode-java/tree/master/snippets)
 - Implement Language configuration in VSCode
+    - [Java lang support extension (by RedHat) repo](https://github.com/redhat-developer/vscode-java)
 - Start our DEBUGGER!
     - Play around with [Mock Debugger](https://code.visualstudio.com/api/extension-guides/debugger-extension#the-mock-debug-extension) to see what we're shooting for 
     - [VSCode Language support blog](https://www.codemag.com/article/1809051/Writing-Your-Own-Debugger-and-Language-Extensions-with-Visual-Studio-Code)
