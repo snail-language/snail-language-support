@@ -49,13 +49,17 @@ October
     - [Some Example Java Snippets in VSCode](https://github.com/redhat-developer/vscode-java/tree/master/snippets)
 - Implement Language configuration in VSCode
     - [Java lang support extension (by RedHat) repo](https://github.com/redhat-developer/vscode-java)
+
+
+November
+- Implement Language Server Protocol
+    - [LSP docs](https://code.visualstudio.com/api/language-extensions/language-server-extension-guide#implementing-a-language-server)
+    - [COOL LSP repo](https://github.com/dynaroars/COOL-Language-Support)
+    - [Intro to LSP blog](https://www.alibabacloud.com/blog/quick-start-to-vscode-plug-ins-language-server-protocol-lsp_595294?spm=a2c41.13494494.0.0)
 - Start our DEBUGGER!
     - Play around with [Mock Debugger](https://code.visualstudio.com/api/extension-guides/debugger-extension#the-mock-debug-extension) to see what we're shooting for 
     - [VSCode Language support blog](https://www.codemag.com/article/1809051/Writing-Your-Own-Debugger-and-Language-Extensions-with-Visual-Studio-Code)
     - [C/C++ Debugger Source Code](https://github.com/microsoft/vscode-cpptools/tree/main/Extension/src)
-
-November
-- TBD, depending on how implementation goes we will have a better sense of how to build this debugger.
 
 December
 

@@ -58,3 +58,12 @@ Today, met with Kevin. Made a few changes to snippets to incorporate while loops
 - Like, essentially having the language server run snail in the background and see if it gets any parse errors back.
 - [LSP docs](https://code.visualstudio.com/api/language-extensions/language-server-extension-guide#implementing-a-language-server)
 - [Cool Repo (with LSP implemented)](https://github.com/dynaroars/COOL-Language-Support)
+
+## 11/01/2022
+
+Reading through LSP docs to get a sense of what we are doing. I think it makes sense, we are just implementing behaviors for a lot of VSCode extension/LSP endpoints so that when VSCode calls to use a language server, our extension can respond appropriately. I copied most of the LSP infrastructure from the lsp-sample provided by VSCode. Currently, it underlines words typed in all caps in plain text files. TODO from now is to reconfigure the new stuff to activate some beginner stuff in snail files. 
+- beginner stuff being an arbitrary highlighting all uppercase words
+- and then add some autocomplete ideas
+
+From here, have to go through LSP docs (linked above) piece by piece and modify my existing code to apply to snail files. 
+
