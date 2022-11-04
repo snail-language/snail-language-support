@@ -10,7 +10,7 @@
     "Programming Languages", "Snippets"
   ],
   "activationEvents": [
-    "onLanguage:plaintext"
+    "onLanguage:snail"
   ],
   "main": "./client/out/extension",
   "contributes": {
@@ -33,13 +33,13 @@
       "type": "object",
       "title": "Snail extension configuration",
       "properties": {
-        "languageServerExample.maxNumberOfProblems": {
+        "snailLanguageServer.maxNumberOfProblems": {
           "scope": "resource",
           "type": "number",
           "default": 100,
           "description": "Controls the maximum number of problems produced by the server."
         },
-        "languageServerExample.trace.server": {
+        "snailLanguageServer.trace.server": {
           "scope": "window",
           "type": "string",
           "enum": [
@@ -47,7 +47,7 @@
             "messages",
             "verbose"
           ],
-          "default": "off",
+          "default": "verbose",
           "description": "Traces the communication between VS Code and the language server."
         }
       }

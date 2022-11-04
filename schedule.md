@@ -56,6 +56,8 @@ November
     - [LSP docs](https://code.visualstudio.com/api/language-extensions/language-server-extension-guide#implementing-a-language-server)
     - [COOL LSP repo](https://github.com/dynaroars/COOL-Language-Support)
     - [Intro to LSP blog](https://www.alibabacloud.com/blog/quick-start-to-vscode-plug-ins-language-server-protocol-lsp_595294?spm=a2c41.13494494.0.0)
+    - [NodeJS child spawn docs](https://nodejs.org/api/child_process.html#child_processspawnsynccommand-args-options)
+    - [Sedlex Docs](https://ocaml.org/p/ocaml-base-compiler/4.14.0/doc/Stdlib/Lexing/index.html#type-position)
 - Start our DEBUGGER!
     - Play around with [Mock Debugger](https://code.visualstudio.com/api/extension-guides/debugger-extension#the-mock-debug-extension) to see what we're shooting for 
     - [VSCode Language support blog](https://www.codemag.com/article/1809051/Writing-Your-Own-Debugger-and-Language-Extensions-with-Visual-Studio-Code)

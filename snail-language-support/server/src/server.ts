@@ -1,7 +1,3 @@
-/* --------------------------------------------------------------------------------------------
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- * ------------------------------------------------------------------------------------------ */
 import {
 	createConnection,
 	TextDocuments,
@@ -20,6 +16,10 @@ import {
 import {
 	TextDocument
 } from 'vscode-languageserver-textdocument';
+
+import {
+	spawnSync
+} from 'child_process';
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -116,7 +116,7 @@ function getDocumentSettings(resource: string): Thenable<ExampleSettings> {
 	if (!result) {
 		result = connection.workspace.getConfiguration({
 			scopeUri: resource,
-			section: 'languageServerExample'
+			section: 'snailLanguageServer'
 		});
 		documentSettings.set(resource, result);
 	}
@@ -135,47 +135,69 @@ documents.onDidChangeContent(change => {
 });
 
 async function validateTextDocument(textDocument: TextDocument): Promise<void> {
+	// TODO is there another way to do it?
 	// In this simple example we get the settings for every validate run.
 	const settings = await getDocumentSettings(textDocument.uri);
 
-	// The validator creates diagnostics for all uppercase words length 2 and more
-	const text = textDocument.getText();
-	const pattern = /\b[A-Z]{2,}\b/g;
-	let m: RegExpExecArray | null;
+	// run the current snail file and return error messages
+	const text: String = textDocument.getText();
 
-	let problems = 0;
+	// get the snail file name
+	// TODO create temp file OR temp directory with temp file underneath
+	const path: String = textDocument.uri;
+	const lst = path.split("/");
+	const filename = lst[lst.length-1]
 	const diagnostics: Diagnostic[] = [];
-	while ((m = pattern.exec(text)) && problems < settings.maxNumberOfProblems) {
-		problems++;
+
+	// run the snail file
+	const child = spawnSync( 'snail', [filename] );
+	const err_msg = child.stdout.toString();
+
+	// extract error information:
+
+	const err_lst = err_msg.split(':');
+
+	if (err_lst[0] == 'ERROR') {
+		const err_line: number = parseInt(err_lst[1]) - 1; // convert to 0-index
+		const err_col: number = parseInt(err_lst[2]) - 1; // convert to 0-index
+		const pattern: RegExp = /\n/g;
+		const newline_locs = Array.from(("\n"+text).matchAll(pattern), x=>x.index)
+		// TODO based on my understanding, this newline_locs SHOULD be capturing the '\n' inside of strings, which would
+		// not count as a newline character for our snail file, which SHOULD throw off our err_start location. However,
+		// current implementation works for both snail files that DO have 
+		const err_start = Number(newline_locs[err_line]) + err_col;
+		const err_end = err_start + 1;
 		const diagnostic: Diagnostic = {
-			severity: DiagnosticSeverity.Warning,
+			severity: DiagnosticSeverity.Error,
 			range: {
-				start: textDocument.positionAt(m.index),
-				end: textDocument.positionAt(m.index + m[0].length)
+				start: textDocument.positionAt(err_start),
+				end: textDocument.positionAt(err_end)
 			},
-			message: `${m[0]} is all uppercase.`,
-			source: 'ex'
+			message: err_msg,
+			source: "snail interpreter"
 		};
-		if (hasDiagnosticRelatedInformationCapability) {
-			diagnostic.relatedInformation = [
-				{
-					location: {
-						uri: textDocument.uri,
-						range: Object.assign({}, diagnostic.range)
-					},
-					message: 'Spelling matters'
-				},
-				{
-					location: {
-						uri: textDocument.uri,
-						range: Object.assign({}, diagnostic.range)
-					},
-					message: 'Particularly for names'
-				}
-			];
-		}
 		diagnostics.push(diagnostic);
 	}
+
+
+	// // The validator creates diagnostics for all uppercase words length 2 and more
+	// const pattern = /\b[A-Z]{2,}\b/g;
+	// let m: RegExpExecArray | null;
+
+	// let problems = 0;
+	// while ((m = pattern.exec(text)) && problems < settings.maxNumberOfProblems) {
+	// 	problems++;
+	// 	const diagnostic: Diagnostic = {
+	// 		severity: DiagnosticSeverity.Warning,
+	// 		range: {
+	// 			start: textDocument.positionAt(m.index),
+	// 			end: textDocument.positionAt(m.index + m[0].length)
+	// 		},
+	// 		message: err_msg,
+	// 		source: 'ex'
+	// 	};
+	// 	diagnostics.push(diagnostic);
+	// }
 
 	// Send the computed diagnostics to VSCode.
 	connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
@@ -202,6 +224,11 @@ connection.onCompletion(
 				label: 'JavaScript',
 				kind: CompletionItemKind.Text,
 				data: 2
+			},
+			{
+				label: 'Snail',
+				kind: CompletionItemKind.Text,
+				data: 3
 			}
 		];
 	}
@@ -217,6 +244,9 @@ connection.onCompletionResolve(
 		} else if (item.data === 2) {
 			item.detail = 'JavaScript details';
 			item.documentation = 'JavaScript documentation';
+		} else if (item.data === 3) {
+			item.detail = 'Snail details';
+			item.documentation = 'Snail documentation by Kevin';
 		}
 		return item;
 	}
