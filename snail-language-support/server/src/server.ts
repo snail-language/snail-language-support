@@ -21,6 +21,12 @@ import {
 	spawnSync
 } from 'child_process';
 
+import {
+	writeFileSync,
+	mkdtempSync,
+	rmSync
+} from 'node:fs';
+
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
 const connection = createConnection(ProposedFeatures.all);
@@ -140,13 +146,13 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 	const settings = await getDocumentSettings(textDocument.uri);
 
 	// run the current snail file and return error messages
-	const text: String = textDocument.getText();
+	const text: string = textDocument.getText().replace(/\n/gm, "\n");
 
-	// get the snail file name
-	// TODO create temp file OR temp directory with temp file underneath
-	const path: String = textDocument.uri;
-	const lst = path.split("/");
-	const filename = lst[lst.length-1]
+	// create temp dir and temp file
+	const dir: string = mkdtempSync('tmp-');
+	const filename: string = dir + '/tmp.sl';
+	writeFileSync(filename, text);
+
 	const diagnostics: Diagnostic[] = [];
 
 	// run the snail file
@@ -154,10 +160,11 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 	const err_msg = child.stdout.toString();
 
 	// extract error information:
-
 	const err_lst = err_msg.split(':');
 
-	if (err_lst[0] == 'ERROR') {
+	let problems = 0;
+	if (err_lst[0] == 'ERROR' && problems < settings.maxNumberOfProblems) {
+		problems++;
 		const err_line: number = parseInt(err_lst[1]) - 1; // convert to 0-index
 		const err_col: number = parseInt(err_lst[2]) - 1; // convert to 0-index
 		const pattern: RegExp = /\n/g;
@@ -179,28 +186,11 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 		diagnostics.push(diagnostic);
 	}
 
-
-	// // The validator creates diagnostics for all uppercase words length 2 and more
-	// const pattern = /\b[A-Z]{2,}\b/g;
-	// let m: RegExpExecArray | null;
-
-	// let problems = 0;
-	// while ((m = pattern.exec(text)) && problems < settings.maxNumberOfProblems) {
-	// 	problems++;
-	// 	const diagnostic: Diagnostic = {
-	// 		severity: DiagnosticSeverity.Warning,
-	// 		range: {
-	// 			start: textDocument.positionAt(m.index),
-	// 			end: textDocument.positionAt(m.index + m[0].length)
-	// 		},
-	// 		message: err_msg,
-	// 		source: 'ex'
-	// 	};
-	// 	diagnostics.push(diagnostic);
-	// }
-
 	// Send the computed diagnostics to VSCode.
 	connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
+
+	// remove our temporary directory
+	rmSync(dir, { recursive: true, force: true });
 }
 
 connection.onDidChangeWatchedFiles(_change => {

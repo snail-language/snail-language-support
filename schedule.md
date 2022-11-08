@@ -58,6 +58,9 @@ November
     - [Intro to LSP blog](https://www.alibabacloud.com/blog/quick-start-to-vscode-plug-ins-language-server-protocol-lsp_595294?spm=a2c41.13494494.0.0)
     - [NodeJS child spawn docs](https://nodejs.org/api/child_process.html#child_processspawnsynccommand-args-options)
     - [Sedlex Docs](https://ocaml.org/p/ocaml-base-compiler/4.14.0/doc/Stdlib/Lexing/index.html#type-position)
+    - [What is Typescript?](https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes.html)
+    - [NodeJS Docs (containing writeFile and rmFile functions)](https://nodejs.org/api/fs.html)
+    - [Homebrew tempfile and tempdir solution blog](https://advancedweb.hu/secure-tempfiles-in-nodejs-without-dependencies/)
 - Start our DEBUGGER!
     - Play around with [Mock Debugger](https://code.visualstudio.com/api/extension-guides/debugger-extension#the-mock-debug-extension) to see what we're shooting for 
     - [VSCode Language support blog](https://www.codemag.com/article/1809051/Writing-Your-Own-Debugger-and-Language-Extensions-with-Visual-Studio-Code)

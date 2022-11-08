@@ -112,3 +112,20 @@ How are we going to modify snail to give us better info?
     - IE char offset start, char offset end
     - give it a different lex and parse error generating function to pass that information
     - [Sedlex Docs](https://ocaml.org/p/ocaml-base-compiler/4.14.0/doc/Stdlib/Lexing/index.html#type-position)
+
+## 11/08/2022
+
+Working on creating a tmp file to run the program. Works well, using [NodeJS writeFile](https://nodejs.org/api/fs.html#fspromiseswritefilefile-data-options) and [NodeJS rmPath](https://nodejs.org/api/fs.html#fspromisesrmpath-options). Ran into some funky stuff where we needed to strip the newlines from the text file to run in snail (because snail doesn't recognize `\n` as one character, only `\` and `n` as separate characters). Thus, the location of the error is messed up because we can't calculate the newline positions and output the red squiggly in the right place. 
+
+Which is actually a problem, because we need to not modify the file when we run it in order to give a valid location. Ok but we can change the way we were erasing newlines to just replace `\n` with `\\n` kind of. Next step is to create a tmp directory so that we are risking less messing with user files. 
+
+Got a working version that creates temp directory, temp file, and then deletes both after executing and pushing diagnostic information. Here is the relevant code lines
+```
+	const dir: string = mkdtempSync('tmp-');
+	const filename: string = dir + '/tmp.sl';
+	writeFileSync(filename, text);
+    ...
+	rmSync(dir, { recursive: true, force: true });
+```
+
+Makes solid use of NodeJS [syncronous API](https://nodejs.org/api/fs.html) as noted on the docs api. 
