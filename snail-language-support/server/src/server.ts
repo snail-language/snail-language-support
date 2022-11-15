@@ -156,32 +156,26 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 	const diagnostics: Diagnostic[] = [];
 
 	// run the snail file
-	const child = spawnSync( 'snail', [filename] );
+	// const options : Object = { cwd: '/Documents/Coursework/Fall2022/snail/snail/'}
+	const child = spawnSync( '/Users/charliereinhardt/Documents/Coursework/Fall2022/snail/snail/_esy/default/build/install/default/bin/snail', ['-s', filename]);
 	const err_msg = child.stdout.toString();
 
 	// extract error information:
-	const err_lst = err_msg.split(':');
-
+	const err_json = JSON.parse(err_msg);
+	
 	let problems = 0;
-	if (err_lst[0] == 'ERROR' && problems < settings.maxNumberOfProblems) {
+	if (err_json.status == 'ERROR' && problems < settings.maxNumberOfProblems) {
 		problems++;
-		const err_line: number = parseInt(err_lst[1]) - 1; // convert to 0-index
-		const err_col: number = parseInt(err_lst[2]) - 1; // convert to 0-index
-		const pattern: RegExp = /\n/g;
-		const newline_locs = Array.from(("\n"+text).matchAll(pattern), x=>x.index)
-		// TODO based on my understanding, this newline_locs SHOULD be capturing the '\n' inside of strings, which would
-		// not count as a newline character for our snail file, which SHOULD throw off our err_start location. However,
-		// current implementation works for both snail files that DO have 
-		const err_start = Number(newline_locs[err_line]) + err_col;
-		const err_end = err_start + 1;
+		const err_start = err_json.location.offset_start
+		const err_end = err_json.location.offset_end
 		const diagnostic: Diagnostic = {
 			severity: DiagnosticSeverity.Error,
 			range: {
 				start: textDocument.positionAt(err_start),
 				end: textDocument.positionAt(err_end)
 			},
-			message: err_msg,
-			source: "snail interpreter"
+			message: err_json.message,
+			source: "Snail " + err_json.type
 		};
 		diagnostics.push(diagnostic);
 	}

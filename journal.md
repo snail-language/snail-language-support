@@ -129,3 +129,63 @@ Got a working version that creates temp directory, temp file, and then deletes b
 ```
 
 Makes solid use of NodeJS [syncronous API](https://nodejs.org/api/fs.html) as noted on the docs api. 
+- [spawnSync](https://nodejs.org/api/child_process.html#child_processspawnsynccommand-args-options)
+
+## 11/08/2022
+
+Now, working on modifying snail. `something^` is a reference which is cool. Basically, we set some references at the beginning of the file as our "options" or "flags", set them to true as we process our command line arguments. Then, as we run our input file, we check against those reference values and change how we run our program snail input file accordingly. Pretty slick. 
+
+TODO do we need to address --server flag and giving an sl-ast or sl-lex file? I lean towards no.
+
+## 11/09/2022
+
+Some crazy stuff. Working on getting references to be accessible in `parser.mly` and `lexer.re`, essentially by putting them into another file and opening it as a module, then switching on it whenever we get a lex or parse error to decide which sort of output we want. so wild. We can dereference a thing in ocaml with the `!` operator [help blog](https://www.cs.cornell.edu/courses/cs3110/2012sp/recitations/rec10.html)
+
+Getting some weird errors. Able to get lexer and parser to output server information when they encounter error, but I am having trouble getting a valid offset value specifically when I get parser errors that call our where function defined in parser.mly. Not sure what is causing it, but I am finding that `loc.pos_cnum` is just the column, and that `loc.pos_bol` is just zero. I THINK it has to do with how we define our lexing positions in token.re in line 119 to 128, because we set a `Lexing.pos_bol: 0`, but playing around with that doesn't get me anywhere yet. We can get the location from our `parser.mly` file that gives a correct offset value (off by one from the column), but we are throwing that value away in lieu of our `where` function. Maybe we use the location from that "switch" for the errors (because it gives us an offset value (that may or may not be off by one)) to use for the --server flag, and the non-server call can keep using the `where` function to get the line and column numbers. Here are the docs I was combing through
+
+- [ReasonML Docs](https://reasonml.github.io/docs/en/overview)
+- [ReasonML Libraries](https://reasonml.github.io/api/)
+- [SedLex (which eventually leads to Lexing.Position)](https://ocaml.org/p/sedlex/2.6/doc/Sedlexing/Utf8/index.html)
+
+
+Plan from here:
+- probably make the call on having the (l, val) way of getting a location for a single error, and seeing if we can use that snail --server call to get a good offset value for that error. 
+- Will also have to look into getting the end position
+
+## 11/10/2022
+
+What did I work on this morning? I was trying to get the language server to call my current esy x snail project, but spawnSync is kind of not having it. Main issue I am running into is how to get the child process to navigate to the esy project, compile the esy x snail project, and then call it on a file **back in the directory the language server is running**. I might be able to spawn a blank sync process, and then manually execute the commands to navigate and build projects and run files etc. Once we are sure that we can get the server error output from our current `esy x snail` version, we can see if the offset values look good enough to implement the rest of the error types. 
+
+I have learned that ENOENT errors likely have to do with pathing issues, and if the child returns with a status of 127, it likely encountered an invalid command. The stdout and stderr come back in buffers that we can convert to strings. 
+
+## 11/11/2022
+
+Met with Kevin. What did I learn?
+1. esy x snail BUILDS a snail executable, that I can call if I navigate and find the right path for it inside the `_esy` directory
+2. YoJson can build me a json string if I feed it an object (we did this in PL)
+3. we set the `pos.bol` value to `0` in the `lexer_loc` section of defining our lexer in `snail.re` (lines ~98-105)
+
+TODO
+1. Modify manual JSON building to YoJson building to let YoJson handle dumping to string
+2. check that the offset value provided matches where we want it to (by testing in LSP call)
+3. Modify JSON output to include
+    - token ending position
+        - It's in the lexer somewhere, but we currently throw it away. We'll have to modify `loc` in `util` to include a `offset_end` value (likely)
+    - status (OK or ERROR)
+4. Add a setting field to the extension to allow us to provide a path for snail (when calling snail in LSP)
+    - if it is empty, just run snail
+    - if it is not empty, run our specified path
+
+## 11/12/2022
+
+Today, worked on getting yojson to build json object. Was struggling, and then remembered that Yojson objects are essentially ``Assoc()` and you need the ` mark in order to access the constructor. 
+
+## 11/15/2022
+
+Today, plan is to work on getting Yojson to handle json values and check the offset value that we are giving lsp. Both are rock solid. When we call with the --server flag, we always exit before evaluating the program with a response of this format:
+
+{"status":"OK","type":"None","message":"No Lexer or Parser errors","location":{"offset_start":0,"offset_end":1,"line":0,"col":0}}
+
+That way we can parse the response as JSON and not crash our language server.
+
+Now, trying to feed offset_end values from lexer and parser. We can pretty easily get offset_end values from our lexer. Lexing.positions returns both a start position and end position, so we need to save the end position and assign it a value in our Util.location value (which requires some rejiggering of Util.location and the corresponding places it is called). Shit works.
