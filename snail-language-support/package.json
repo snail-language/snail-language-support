@@ -31,7 +31,7 @@
     }],
     "configuration": {
       "type": "object",
-      "title": "Snail extension configuration",
+      "title": "Snail Language Support",
       "properties": {
         "snailLanguageServer.maxNumberOfProblems": {
           "scope": "resource",
@@ -47,8 +47,13 @@
             "messages",
             "verbose"
           ],
-          "default": "verbose",
+          "default": "off",
           "description": "Traces the communication between VS Code and the language server."
+        },
+        "snailLanguageServer.snailPath": {
+          "type": "string",
+          "default": "snail",
+          "description": "Path to snail executable to use for Language Server"
         }
       }
     }
