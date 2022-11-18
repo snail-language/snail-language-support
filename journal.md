@@ -189,3 +189,24 @@ Today, plan is to work on getting Yojson to handle json values and check the off
 That way we can parse the response as JSON and not crash our language server.
 
 Now, trying to feed offset_end values from lexer and parser. We can pretty easily get offset_end values from our lexer. Lexing.positions returns both a start position and end position, so we need to save the end position and assign it a value in our Util.location value (which requires some rejiggering of Util.location and the corresponding places it is called). Shit works.
+
+Now, trying to add a setting to the extension to let a user put a path to their specified version of snail. Did it through the [contributes.configuration endpoint](https://code.visualstudio.com/api/references/contribution-points#contributes.configuration). Just worked.
+
+Found an SYE project by Vela Dimitrova Mineva, advised by Dr. Lisa Torrey: "Refactoring the ReflectionApp Java Applet" that seems to be a good computer science Software Development focused SYE that I can read through just to help give myself a mental model of what my final paper might look like for a project like snail language support. Got an electronic copy from Dr. Torrey. 
+
+## 11/16/2022
+
+Our Language Server is in a good spot right now. There certainly are additional features we could consider adding, and potentially will go through effort to add, but right now I want to shift gears to start actually looking at a debugger. 
+
+Some debuggers are implemented and stored in a separate extension package or project, but I think it is possible to put them into the same package/project/repository (like in this [C/C++ example](https://github.com/microsoft/vscode-cpptools/blob/main/Extension/README.md))
+
+## 11/17/2022
+
+Met with Kevin. Language Server is looking good. Moving to Debugger. We will need to find a way to keep track of breakpoints (as in which lines have breakpoints). Then, when we are evaluating expressions, if a given expression has a breakpoint, we will call a separate function to support debugging functions (like printing out variable values), and when we want to continue running our program, we return from the function and continue evaluating our expressions in the program. 
+
+TODO
+1. Compile the functions/things that snail needs to be able to do/keep track of in order to work with VSCode DAP
+2. add files and directories to have a "debugger" in our extension
+    - Just like the contributes endpoints and stuff, enough to have a debug window start up (but not actually do anything)
+3. Read Vela Dimitrova Mineva SYE project
+    - Start outlining how my SYE paper might look organizationally
