@@ -210,3 +210,14 @@ TODO
     - Just like the contributes endpoints and stuff, enough to have a debug window start up (but not actually do anything)
 3. Read Vela Dimitrova Mineva SYE project
     - Start outlining how my SYE paper might look organizationally
+
+## 11/29/2022
+
+Today, going to try to figure out what snail needs to be able to do in order to work with VSCode DAP. ie what functionality must it support.
+1. Keeping track of breakpoints (line number in source, line position in source (multiple per line), when a particular function is called, when a particular condition evaluates to true)
+2. Keeping track of logpoints 
+3. Be able to keep track of stepping forward, stepping into, stopping and resuming execution
+4. Keep track of stack and call traces
+5. Report environment and store variables and values (as primitives and complex structures)
+6. keep track of watch expressions (expressions to execute whenever the debugger pauses)
+7. 
