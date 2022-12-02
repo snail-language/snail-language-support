@@ -220,4 +220,38 @@ Today, going to try to figure out what snail needs to be able to do in order to 
 4. Keep track of stack and call traces
 5. Report environment and store variables and values (as primitives and complex structures)
 6. keep track of watch expressions (expressions to execute whenever the debugger pauses)
-7. 
+
+## 12/01/2022
+
+Today, going to try to dig deeper into VSCode DAP docs to figure out what techy stuff snail needs to support. I.e. get more familiar with the API and what functions need to be implemented
+- [DAP specifications](https://microsoft.github.io/debug-adapter-protocol/specification)
+1. keep track of breakpoint locations (source locations, function names, exceptions/errors (maybe))
+- [DAP breakpoints docs](https://microsoft.github.io/debug-adapter-protocol/specification#Requests_SetBreakpoints)
+1a. Stop at said breakpoint, based on source code line number, not ast location
+2. return method/scope identifiers/names, line numbers and column numbers for beginning(required) and end(optional) of said scope (often methods or objects probably)
+- for Stack frames and threads for stack traces
+- [DAP threads](https://microsoft.github.io/debug-adapter-protocol/specification#Types_Thread)
+- [DAP stack frames](https://microsoft.github.io/debug-adapter-protocol/specification#Types_StackFrame)
+- [DAP next](https://microsoft.github.io/debug-adapter-protocol/specification#Requests_Next)
+- [DAP pause](https://microsoft.github.io/debug-adapter-protocol/specification#Requests_Pause)
+- [DAP continue](https://microsoft.github.io/debug-adapter-protocol/specification#Requests_Continue)
+- [DAP step in](https://microsoft.github.io/debug-adapter-protocol/specification#Requests_StepIn)
+- [DAP step out](https://microsoft.github.io/debug-adapter-protocol/specification#Requests_StepOut)
+3. Memory locations (likely already tracked in environment or store)
+- [DAP memory events](https://microsoft.github.io/debug-adapter-protocol/specification)
+4. Ability to execute single expressions not a part of an entire program
+- [DAP evaluate expression request](https://microsoft.github.io/debug-adapter-protocol/specification#Requests_Evaluate)
+5. Modify environment and store mid execution while in debug mode?
+- [DAP set expression request](https://microsoft.github.io/debug-adapter-protocol/specification#Requests_SetExpression)
+6. Keep track of step in, step out when continuing execution
+- [DAP StepInTargets request](https://microsoft.github.io/debug-adapter-protocol/specification#Requests_StepInTargets)
+7. Side effect free expression evaluation (for hovering capabilities)
+8. Keep filepath to source code
+
+shortened list:
+1. breakpoints
+2. call stack
+3. contents of environment and store
+
+
+

@@ -75,6 +75,10 @@ November
     - [Debugger Adapter Protocol Page](https://microsoft.github.io/debug-adapter-protocol/)
 
 December
+- By the end of Fall semester:
+    - Be able to launch a debugging window in a VSCode client running our extension
+        - will require meshing mock debug code with existing extension code
+
 
 **December 16th** Last day of Fall Classes
 
