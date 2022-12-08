@@ -253,5 +253,17 @@ shortened list:
 2. call stack
 3. contents of environment and store
 
+## 12/06/22
+
+Trying to mesh mock debugger and language server package to be able to run mock debug (markdown) files when opening our LSP for snail extension. Not much luck yet. Been trying to modify package.json and launch.json files. Might need to look at extensions.json, settings.json, tasks.json, or some other configuration files
+
+This document talks about what launch and attach configurations actually do, and may help clear some confusion about what actually happens when I try to launch my extension (and what isn't happening)
+- https://code.visualstudio.com/docs/editor/debugging#_launch-configurations
+
+## 12/08/22
+
+Starting to understand what I need to do. In the `package.json` of the extension package (as a whole), we have a `main` attribute. This specifies a path to a generated `extension.js` file, which is the code that our extension runs. So, how I have my code organized right now, I need to insert the debugger code (from `debug/src/` into the `client/src/` code), to give VSCode a single extension file to run. 
+
+
 
 
