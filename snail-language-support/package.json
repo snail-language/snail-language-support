@@ -7,28 +7,40 @@
     "vscode": "^1.71.0"
   },
   "categories": [
-    "Programming Languages", "Snippets"
+    "Programming Languages",
+    "Snippets"
   ],
   "activationEvents": [
     "onLanguage:snail"
   ],
   "main": "./client/out/extension",
   "contributes": {
-    "languages": [{
-      "id": "snail",
-      "aliases": ["Snail", "snail"],
-      "extensions": [".sl"],
-      "configuration": "./language-configuration.json"
-    }],
-    "grammars": [{
-      "language": "snail",
-      "scopeName": "source.sl",
-      "path": "./syntaxes/snail.tmLanguage.json"
-    }],
-    "snippets": [{
-      "language": "snail",
-      "path": "./snippets/snippets.json"
-    }],
+    "languages": [
+      {
+        "id": "snail",
+        "aliases": [
+          "Snail",
+          "snail"
+        ],
+        "extensions": [
+          ".sl"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "snail",
+        "scopeName": "source.sl",
+        "path": "./syntaxes/snail.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "snail",
+        "path": "./snippets/snippets.json"
+      }
+    ],
     "commands": [
       {
         "command": "snail-language-support.runSnailFile",
@@ -92,11 +104,12 @@
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -b",
     "watch": "tsc -b -w",
-    "lint": "eslint ./client/src ./server/src --ext .ts,.tsx",
-    "postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
+    "lint": "eslint ./client/src --ext .ts,.tsx",
+    "postinstall": "cd client && npm install && cd ..",
     "test": "sh ./scripts/e2e.sh"
   },
   "devDependencies": {
+    "@types/glob": "^8.0.1",
     "@types/mocha": "^9.1.0",
     "@types/node": "^16.11.7",
     "@typescript-eslint/eslint-plugin": "^5.30.0",

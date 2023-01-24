@@ -5,7 +5,9 @@
 		"lib": ["es2020"],
 		"outDir": "out",
 		"rootDir": "src",
-		"sourceMap": true
+		"moduleResolution": "node",
+		"sourceMap": true,
+		"strict": true,
 	},
 	"include": [
 		"src"
@@ -15,7 +17,6 @@
 		".vscode-test"
 	],
 	"references": [
-		{ "path": "./client" },
-		{ "path": "./server" }
+		{ "path": "./client" }
 	]
 }

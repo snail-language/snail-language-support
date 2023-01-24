@@ -330,4 +330,4 @@ Was able to get a RunSnail command to be viewable when running the extension. I'
 
 ## 01/24/22
 
-Back on the hunt for the play button. Going to look at this `contributes.menus.editor/title/run` endpoint in `package.json`. And I like what I find. some changes in package.json let us define some commands that we can give behavior inside of `client/extension.ts`. 
+Back on the hunt for the play button. Going to look at this `contributes.menus.editor/title/run` endpoint in `package.json`. And I like what I find. some changes in package.json let us define some commands that we can give behavior inside of `client/extension.ts`. This [commit](https://github.com/snail-language/snail-vscodesupport/commit/7e0850fc54902633bea1572838a7050e03090236) shows those changes. 
