@@ -264,6 +264,70 @@ This document talks about what launch and attach configurations actually do, and
 
 Starting to understand what I need to do. In the `package.json` of the extension package (as a whole), we have a `main` attribute. This specifies a path to a generated `extension.js` file, which is the code that our extension runs. So, how I have my code organized right now, I need to insert the debugger code (from `debug/src/` into the `client/src/` code), to give VSCode a single extension file to run. 
 
+Things I still need to merge: 
+- tsconfig.json
+- extension.ts
+- probably where the out file goes and how we access it from `package.json` main
+
+Getting the extension to open and recognize some debugging ability. Now, we need to switch it from the mock debug adapter stuff to some moderately real debug stuff. i.e. actually do something when we hit the debug play button. 
+
+## 12/09/22
+
+Going to try to debug the mock debugger to see our call stack to see what code is running when we hit the play button on a markdown debug session. Not very informative actually. but actually kind of informative. 
+
+TODO
+1. get the play button to work (i.e. allow us to run a snail file with the play button in the top right corner)
+    - for example, play a python file from that button
+
+## 01/20/22
+
+Meeting with Kevin later today to decide on a weekly meeting time for this SYE work. Have not done anything since the end of last semester. Going to play around with some python files in vscode to see how this play button works.
 
 
+CHAT WITH KEVIN
+Planned out the semester. Will likely need to do some socket programming in getting snail to interact with VSCode Debug Protocol
+    - tcp communication between two programs
+    - vscode dap uses sockets and ports as 'mailboxes' to send information back and forth b/w two programs
+    - snail will have to be the tcp server and be able to respond to DAP calls like "set a breakpoint here" etc.
 
+    - can start by doing basic socket programming in python
+
+List of debugging operations we want to support
+1. breakpoints
+2. logpoints
+3. stopping and starting (and resuming) execution
+4. step forward
+5. step into
+6. stack frame and call traces
+7. print environment and store variables and values (as primitives and complex structures)
+
+TODO
+- play button
+- basic chat type client in python (socket programming)
+    - netcat (nc) network cat as a starting point
+
+The play button just executes a command line command of `path-to-python-interpreter current-file-path`. So, somewhere in vscode settings is a saved path to a selected python interpreter, and vscode is able to figure out the existing file path. Going to play around with some other file types and see what vscode does. 
+- Python calls a path to a python interpreter and path to current file
+- Java calls our environment, java "interpreter", passes some command line args and a path to the class to execute/run
+- C calls gcc with some flags, and then executes the executable produced. Looked like it was calling a "preLaunchTask" type thing, maybe
+- JS does not have a play button (likely because you need to call js in a browser type environment)
+- ReasonML does not have a play button (likely because it is relatively esoteric and crazy)
+- Assembly does not have a play button (likely because it is not supported out of the box in vscode and I don't have extensions downloaded for it)
+
+Want to investigate some `launch.json` and other setting and configuration files in existing extensions (such as [Code Runner](https://github.com/formulahendry/vscode-code-runner))
+
+## 01/23/22
+
+CodeRunner has a lot of features I don't need to understand. Going to look at [Pylance](https://github.com/Microsoft/vscode-python)
+
+Finding some useful information about VSCode commands and extensions on these web pages
+- [Extension API](https://code.visualstudio.com/api)
+- [Commands](https://code.visualstudio.com/api/extension-guides/command)
+
+I think I will need to create a command (that can be activated in the command pallette) so that it is user facing, so I can then use that command from the VSCode editor tool bar. [This text snippet](https://code.visualstudio.com/api/extension-guides/command#creating-a-user-facing-command) makes me think that.
+
+Was able to get a RunSnail command to be viewable when running the extension. I'm logging to the debug console in the VSCode instance where my extension launched from. Next, I want to confirm my suspicion that we can execute this command through the VSCode API, and that we can use the VSCode API through the run code button. 
+
+## 01/24/22
+
+Back on the hunt for the play button. Going to look at this `contributes.menus.editor/title/run` endpoint in `package.json`. And I like what I find. some changes in package.json let us define some commands that we can give behavior inside of `client/extension.ts`. 

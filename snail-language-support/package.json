@@ -29,6 +29,36 @@
       "language": "snail",
       "path": "./snippets/snippets.json"
     }],
+    "commands": [
+      {
+        "command": "snail-language-support.runSnailFile",
+        "title": "Run Snail Program",
+        "category": "Snail!",
+        "enablement": "!inDebugMode",
+        "icon": "$(play)"
+      },
+      {
+        "command": "snail-language-support.debugSnailFile",
+        "title": "Debug Snail Program",
+        "category": "Snail!",
+        "enablement": "!inDebugMode",
+        "icon": "$(debug-alt)"
+      }
+    ],
+    "menus": {
+      "editor/title/run": [
+        {
+          "command": "snail-language-support.runSnailFile",
+          "when": "resourceLangId == snail",
+          "group": "navigation@1"
+        },
+        {
+          "command": "snail-language-support.debugSnailFile",
+          "when": "resourceLangId == snail",
+          "group": "navigation@2"
+        }
+      ]
+    },
     "configuration": {
       "type": "object",
       "title": "Snail Language Support",

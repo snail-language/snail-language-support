@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { workspace, ExtensionContext } from 'vscode';
+import { workspace, ExtensionContext, commands } from 'vscode';
 
 import {
 	LanguageClient,
@@ -11,6 +11,19 @@ import {
 let client: LanguageClient;
 
 export function activate(context: ExtensionContext) {
+
+	const runSnailFileCmd = 'snail-language-support.runSnailFile';
+	const runSnailFileHandler = (word : string = "string") => {
+		console.log("running a snail file!");
+	}
+	context.subscriptions.push(commands.registerCommand(runSnailFileCmd, runSnailFileHandler));
+
+	const debugSnailFileCmd = 'snail-language-support.debugSnailFile';
+	const debugSnailFileHandler = (word : string = "string") => {
+		console.log("debugging a snail file!");
+	}
+	context.subscriptions.push(commands.registerCommand(debugSnailFileCmd, debugSnailFileHandler));
+
 	// The server is implemented in node
 	const serverModule = context.asAbsolutePath(
 		path.join('server', 'out', 'server.js')
