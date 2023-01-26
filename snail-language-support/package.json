@@ -11,7 +11,9 @@
     "Snippets"
   ],
   "activationEvents": [
-    "onLanguage:snail"
+    "onLanguage:snail",
+    "onCommand:snail-language-support.runSnailFile",
+    "onCommand:snail-language-support.debugSnailFile"
   ],
   "main": "./client/out/extension",
   "contributes": {

@@ -331,3 +331,26 @@ Was able to get a RunSnail command to be viewable when running the extension. I'
 ## 01/24/22
 
 Back on the hunt for the play button. Going to look at this `contributes.menus.editor/title/run` endpoint in `package.json`. And I like what I find. some changes in package.json let us define some commands that we can give behavior inside of `client/extension.ts`. This [commit](https://github.com/snail-language/snail-vscodesupport/commit/7e0850fc54902633bea1572838a7050e03090236) shows those changes. 
+
+Also simplified package structure to help with future work by collapsing `server/src` into `client/src` and updating `client/package.json` and `client/tsconfig.json` appropriately. May continue to simplify structure into one `package.json` file, but for now will keep `client/package.json` as it's own thing. This [commit](https://github.com/snail-language/snail-vscodesupport/commit/a352149469962a37371bd6139896be9b7d412ca1) shows those changes. 
+
+Tried to make some progress on giving the runSnailFile command actual behavior. Not really any progress. A lot of fumbling around with how to get the snail path. 
+
+## 01/25/22
+
+Goal today is to get into some tcp/socket programming. First, some youtube videos and articles about what tcp/socket programming actually is. Here are some of the videos I watched
+- [Socket programming in C]()
+
+## 01/26/22
+
+Today is to make some progress on our run code button. Tasks that need to happen for that to work:
+- get snail path from extension settings
+- get document/file path
+- open new vscode terminal (or execute in existing one)
+- run .sl file on the command line
+
+I think the way to do it is going to be by having the extension [create a task](https://code.visualstudio.com/api/references/contribution-points#contributes.taskDefinitions) that lets the user run a snail file, and then executing that task within the `runSnailFile` command. For development sake, going to start by making a local task and getting that to work, creating a statically provided task in the package.json contributes endpoint, and then trying to programmatically build it within the extension.
+
+I actually don't think I want to execute a task, because that terminal window doesn't get reused. I think I want to go back to more manually opening a new vscode terminal and executing a command in there.
+
+My lord. I think I got it. Heavily modeled off of [this extension](457d4d/src/extension.ts#L76). Creating a new vscode terminal window and then sending text to it. 

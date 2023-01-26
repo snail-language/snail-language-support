@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { workspace, ExtensionContext, commands } from 'vscode';
+import { workspace, commands, window, ExtensionContext, Terminal} from 'vscode';
 
 import {
 	LanguageClient,
@@ -10,19 +10,14 @@ import {
 
 let client: LanguageClient;
 
+let snailTerminal : Terminal;
+let RUN_SNAIL_FILE_CMD = 'snail-language-support.runSnailFile';
+let DEBUG_SNAIL_FILE_CMD = 'snail-language-support.debugSnailFile';
+
 export function activate(context: ExtensionContext) {
 
-	const runSnailFileCmd = 'snail-language-support.runSnailFile';
-	const runSnailFileHandler = (word : string = "string") => {
-		console.log("running a snail file!");
-	}
-	context.subscriptions.push(commands.registerCommand(runSnailFileCmd, runSnailFileHandler));
-
-	const debugSnailFileCmd = 'snail-language-support.debugSnailFile';
-	const debugSnailFileHandler = (word : string = "string") => {
-		console.log("debugging a snail file!");
-	}
-	context.subscriptions.push(commands.registerCommand(debugSnailFileCmd, debugSnailFileHandler));
+	context.subscriptions.push(commands.registerCommand(RUN_SNAIL_FILE_CMD, runSnailFile));
+	context.subscriptions.push(commands.registerCommand(DEBUG_SNAIL_FILE_CMD, debugSnailFile));
 
 	// The server is implemented in node
 	const serverModule = context.asAbsolutePath(
@@ -65,9 +60,27 @@ export function activate(context: ExtensionContext) {
 	client.start();
 }
 
+function runSnailFile() {
+	if (snailTerminal === undefined) {
+		snailTerminal = window.createTerminal("Snail");
+	}
+	snailTerminal.show();
+
+	const filePath : String | undefined = window.activeTextEditor?.document.fileName;
+	// TODO get path from extension settings
+	let snailPath : String = 'snail'
+
+	snailTerminal.sendText(snailPath + ' ' + filePath)
+}
+
+function debugSnailFile() {
+	console.log("debugging a snail file!");
+}
+
 export function deactivate(): Thenable<void> | undefined {
 	if (!client) {
 		return undefined;
 	}
 	return client.stop();
 }
+
