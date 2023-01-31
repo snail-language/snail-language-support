@@ -353,32 +353,4 @@ I think the way to do it is going to be by having the extension [create a task](
 
 I actually don't think I want to execute a task, because that terminal window doesn't get reused. I think I want to go back to more manually opening a new vscode terminal and executing a command in there.
 
-My lord. I think I got it. Heavily modeled off of [this extension](457d4d/src/extension.ts#L76). Creating a new vscode terminal window and then sending text to it. [This commit](https://github.com/snail-language/snail-vscodesupport/commit/241a0e5807655dc6e5d9049e1f3b2f139cc8a4c9) has the relevant changes
-
-## 01/28/23 MEETING WITH KEVIN
-
-TODO
-- make a debug adapter that can connect to a tcp server
-    - that can communicate with vscode through stdin and stdout
-    - anything recieved from stdin should send to socket
-    - anything recieved from socket should print to stdout
-- also figure out if debug adapter has to launch snail program on its own, or if snail and debug adapter are launched simultaneously
-
-might be challenging bc it has to wait for both input from vscode and snail, waiting for one can't stall the other
-- typescript might have a solution for this
-- basic approach needs a multithreaded program to do multiple things at once
-    - select() as a system call
-        - will let you know if there is anything to be read from tcp socket or stdin, so then we can do actions of reading or sending from those channels
-        - but select() will allow us to not block all activity while waiting
-- [ocaml-dap](https://github.com/hackwaly/ocaml-dap) will be very useful for allowing snail to recieve vscode dap requests etc.
-
-TODO
-- a debug adapter (`debugAdapter.ts`) that can listen on stdin, spit over tcp to a nc server
-- the same debug adapter that listens over tcp and spits to stdout
-- have that debug adapter recieve and send simultaneously
-
-relevant links
-    - [Nodejs process.stdin](https://stackoverflow.com/questions/65985833/handle-huge-amount-of-data-in-node-js-through-stdin) to listen on stdin in bulks of data
-    - [NodeJS TCP stream](https://stackoverflow.com/questions/22054768/tcp-stream-on-nodejs) to send tcp to tcp server
-        - [NodeJS net docs](https://nodejs.org/api/net.html) for other tcp functionality
-    - [DAP overview](https://microsoft.github.io/debug-adapter-protocol/overview) for how vscode talks to DAP how DAP talks to vscode (through stdin and stdout)
+My lord. I think I got it. Heavily modeled off of [this extension](457d4d/src/extension.ts#L76). Creating a new vscode terminal window and then sending text to it. 

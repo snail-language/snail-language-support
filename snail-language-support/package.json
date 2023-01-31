@@ -27,7 +27,7 @@
         "extensions": [
           ".sl"
         ],
-        "configuration": "./language-configuration.json"
+        "configuration": "./configurations/language-configuration.json"
       }
     ],
     "grammars": [
