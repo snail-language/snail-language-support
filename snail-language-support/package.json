@@ -105,7 +105,6 @@
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -b",
-    "watch": "tsc -b -w",
     "lint": "eslint ./client/src --ext .ts,.tsx",
     "postinstall": "cd client && npm install && cd ..",
     "test": "sh ./scripts/e2e.sh"
