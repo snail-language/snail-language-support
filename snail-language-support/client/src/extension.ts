@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { workspace, commands, window, ExtensionContext, Terminal} from 'vscode';
+import { workspace, commands, window, ExtensionContext, Terminal, ConfigurationScope, extensions} from 'vscode';
 
 import {
 	LanguageClient,
@@ -68,8 +68,16 @@ function runSnailFile() {
 
 	const filePath : String | undefined = window.activeTextEditor?.document.fileName;
 	// TODO get path from extension settings
-	let snailPath : String = 'snail'
+	let scope : ConfigurationScope;
+	let snailSettings = workspace.getConfiguration('cprein19.snail-language-support');
 
+	let snailExtension = extensions.getExtension('cprein19.snail-language-support');
+
+	let snailPath : String = 'snail';
+
+
+
+	console.log(snailSettings);
 	snailTerminal.sendText(snailPath + ' ' + filePath)
 }
 

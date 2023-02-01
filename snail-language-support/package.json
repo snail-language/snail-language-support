@@ -1,6 +1,7 @@
 {
   "name": "snail-language-support",
   "displayName": "Snail Language Support",
+  "publisher": "cprein19",
   "description": "Extension providing useful language support for the Snail programming language",
   "version": "0.0.1",
   "engines": {
@@ -77,7 +78,7 @@
       "type": "object",
       "title": "Snail Language Support",
       "properties": {
-        "snailLanguageServer.maxNumberOfProblems": {
+        "snail-language-support.maxNumberOfProblems": {
           "scope": "resource",
           "type": "number",
           "default": 100,
@@ -95,6 +96,7 @@
           "description": "Traces the communication between VS Code and the language server."
         },
         "snailLanguageServer.snailPath": {
+          "scope": "application",
           "type": "string",
           "default": "snail",
           "description": "Path to snail executable to use for Language Server"
