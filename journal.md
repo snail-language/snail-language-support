@@ -380,3 +380,14 @@ relevant links
     - [DAP overview](https://microsoft.github.io/debug-adapter-protocol/overview) for how vscode talks to DAP how DAP talks to vscode (through stdin and stdout)
 
 ## 01/31/23
+
+Trying to mess with our actual extension settings. Finding that we actually maybe need to initialize our extension settings somewhere when we activate our extension in `extension.ts`. Some helpful resources:
+- [CodeSnap, a simple looking extension that may help as an example](https://github.com/kufii/CodeSnap/tree/6de4a985c48de8ab69c4258e9406e408f7e5a8d6)
+- [getting workspace configurations](https://stackoverflow.com/questions/65192859/for-workspace-getconfiguration-how-do-i-get-a-setting-from-the-multi-root-works)
+- [full vscode api](https://code.visualstudio.com/api/references/vscode-api)
+- [How to make an extension youtube video I want to watch](https://www.youtube.com/watch?v=a5DX5pQ9p5M)
+    - might be kind of helpful
+
+## 02/01/23
+
+Think I got it. I've found the actual snail path. Which is sick. This commit has it []()

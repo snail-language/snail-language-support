@@ -67,17 +67,10 @@ function runSnailFile() {
 	snailTerminal.show();
 
 	const filePath : String | undefined = window.activeTextEditor?.document.fileName;
-	// TODO get path from extension settings
+	// TODO deal with scope?
 	let scope : ConfigurationScope;
-	let snailSettings = workspace.getConfiguration('cprein19.snail-language-support');
+	let snailPath : String = workspace.getConfiguration('snailLanguageServer').snailPath;
 
-	let snailExtension = extensions.getExtension('cprein19.snail-language-support');
-
-	let snailPath : String = 'snail';
-
-
-
-	console.log(snailSettings);
 	snailTerminal.sendText(snailPath + ' ' + filePath)
 }
 

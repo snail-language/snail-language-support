@@ -154,9 +154,9 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 	const diagnostics: Diagnostic[] = [];
 
 	// run the snail file
-	const snail_path = settings.snailPath;
-	const snail_path_dev = '/Users/charliereinhardt/Documents/Coursework/Fall2022/snail/snail/_esy/default/build/install/default/bin/snail';
-	const child = spawnSync( snail_path_dev, ['-s', filename]);
+	const snailPath = settings.snailPath;
+	const snailPathDev = '/Users/charliereinhardt/Documents/Coursework/Fall2022/snail/snail/_esy/default/build/install/default/bin/snail';
+	const child = spawnSync( snailPathDev, ['-s', filename]);
 	const err_msg = child.stdout.toString();
 
 	// extract error information:

@@ -78,7 +78,7 @@
       "type": "object",
       "title": "Snail Language Support",
       "properties": {
-        "snail-language-support.maxNumberOfProblems": {
+        "snailLanguageServer.maxNumberOfProblems": {
           "scope": "resource",
           "type": "number",
           "default": 100,
