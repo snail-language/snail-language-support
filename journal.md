@@ -377,6 +377,7 @@ relevant links
     - [Nodejs process.stdin](https://stackoverflow.com/questions/65985833/handle-huge-amount-of-data-in-node-js-through-stdin) to listen on stdin in bulks of data
     - [NodeJS TCP stream](https://stackoverflow.com/questions/22054768/tcp-stream-on-nodejs) to send tcp to tcp server
         - [NodeJS net docs](https://nodejs.org/api/net.html) for other tcp functionality
+        - [Old NodeJS tutorial](https://www.youtube.com/watch?v=4yPnp4k8VMA)
     - [DAP overview](https://microsoft.github.io/debug-adapter-protocol/overview) for how vscode talks to DAP how DAP talks to vscode (through stdin and stdout)
 
 ## 01/31/23
@@ -390,4 +391,20 @@ Trying to mess with our actual extension settings. Finding that we actually mayb
 
 ## 02/01/23
 
-Think I got it. I've found the actual snail path. Which is sick. This commit has it []()
+Think I got it. I've found the actual snail path. Which is sick. This [commit](https://github.com/snail-language/snail-vscodesupport/commit/fc0149efa98eaf5465dc882bb6f34478c3d1d067) has it
+
+## 02/03/23
+
+Got a very basic .ts script for the debugAdapter, is able to read from stdin and send to tcp, and read from tcp and send to stdout.
+
+am also able to launch that debugger from vscode only from the debugging window once I have a `launch.json` file defined in `.vscode`. I think I need to find a way to automatically provide a `launch.json` file or provider from the extension, and then link that launch task to my `debugSnailFile` command that I know I can execute from the debug icon or command pallette. 
+
+## 02/11/23
+
+I think the key lies in line 30 of [mock debug](https://github.com/microsoft/vscode-mock-debug/blob/606454ff3bd669867a38d9b2dc7b348d324a3f6b/src/extension.ts), I don't think I need to provide a full configuration PROVIDER (yet), but there should be a way to pass a static configuration.
+
+OK, some good progress here. Am able to launch into a debugger with the `debug.startDebugging`. Here is what happens. By default (without any [factory providers](https://code.visualstudio.com/api/extension-guides/debugger-extension#alternative-approach-to-develop-a-debugger-extension) registered), our extension will call `node debugAdapter.js`, based on what program, runtime, and args we have defined in `package.json`. from there, VSCode interacts with our debugadapter through stdin and stdout, and we can listen with our `nc -l 9999` on our other terminal. We need to find a way to launch snail in debug mode.
+
+Before meeting with kevin, I want to flesh out the configurations, so that we can launch debugging from the debug icon and also through defining a launch.json, will heavily read off of mockdebug for that.
+
+https://github.com/microsoft/vscode-mock-debug 
