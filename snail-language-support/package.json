@@ -14,7 +14,8 @@
   "activationEvents": [
     "onLanguage:snail",
     "onCommand:snail-language-support.runSnailFile",
-    "onCommand:snail-language-support.debugSnailFile"
+    "onCommand:snail-language-support.debugSnailFile",
+    "onDebug"
   ],
   "main": "./client/out/extension",
   "contributes": {
@@ -48,19 +49,28 @@
       {
         "command": "snail-language-support.runSnailFile",
         "title": "Run Snail Program",
-        "category": "Snail!",
+        "category": "Snail",
         "enablement": "!inDebugMode",
         "icon": "$(play)"
       },
       {
         "command": "snail-language-support.debugSnailFile",
         "title": "Debug Snail Program",
-        "category": "Snail!",
+        "category": "Snail",
         "enablement": "!inDebugMode",
         "icon": "$(debug-alt)"
       }
     ],
     "menus": {
+      "commandPalette": [
+        {
+          "category": "Snail",
+          "command": "snail-language-support.debugSnailFile",
+          "icon": "$(debug-alt)",
+          "title": "Debug Snail Program",
+          "when": "resourceLangId == snail"
+        }
+      ],
       "editor/title/run": [
         {
           "command": "snail-language-support.runSnailFile",
@@ -102,8 +112,44 @@
           "description": "Path to snail executable to use for Language Server"
         }
       }
-    }
+    },
+    "breakpoints": [
+      {
+        "language": "snail"
+      }
+    ],
+    "debuggers": [
+      {
+        "type": "snail",
+        "label": "Snail Debugger",
+
+        "program": "./client/out/debugAdapter.js",
+        "runtime": "node",
+        "args": [],
+        
+        "configurationAttributes": {
+          "launch": {
+            "required": ["program"],
+            "properties": {
+              "program": "string",
+              "description": "Path to a file to debug",
+              "default": "${workspaceFolder}/${file}"
+            }
+          }
+        },
+        "initialConfigurations": [
+            {
+              "type": "snail",
+              "request": "launch",
+              "name": "Debug Snail File from package.json",
+              "program": "${workspaceFolder}/${file}"
+            }
+        ],
+        "configurationSnippets": []
+      }
+    ]
   },
+  
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -b",
