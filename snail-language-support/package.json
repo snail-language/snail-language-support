@@ -9,13 +9,15 @@
   },
   "categories": [
     "Programming Languages",
-    "Snippets"
+    "Snippets",
+    "Debuggers"
   ],
   "activationEvents": [
     "onLanguage:snail",
     "onCommand:snail-language-support.runSnailFile",
     "onCommand:snail-language-support.debugSnailFile",
-    "onDebug"
+    "onDebug",
+    "onDebugResolve:snail"
   ],
   "main": "./client/out/extension",
   "contributes": {
@@ -64,10 +66,11 @@
     "menus": {
       "commandPalette": [
         {
-          "category": "Snail",
           "command": "snail-language-support.debugSnailFile",
-          "icon": "$(debug-alt)",
-          "title": "Debug Snail Program",
+          "when": "resourceLangId == snail"
+        },
+        {
+          "command": "snail-language-support.runSnailFile",
           "when": "resourceLangId == snail"
         }
       ],
@@ -122,6 +125,10 @@
       {
         "type": "snail",
         "label": "Snail Debugger",
+        
+        "languages": [
+          "snail"
+        ],
 
         "program": "./client/out/debugAdapter.js",
         "runtime": "node",
@@ -145,7 +152,18 @@
               "program": "${workspaceFolder}/${file}"
             }
         ],
-        "configurationSnippets": []
+        "configurationSnippets": [
+          {
+            "label": "Snail Debug: Launch Snippet",
+            "description": "A new configuration for debugging a snail program",
+            "body": {
+              "type": "snail",
+              "request": "launch",
+              "name": "${2:Launch Program}",
+              "program": "^\"\\${workspaceFolder}/${1:Program}\""
+            }
+          }
+        ]
       }
     ]
   },

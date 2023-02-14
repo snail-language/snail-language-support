@@ -22,5 +22,5 @@ client.on('error', (err) => {
 
 process.stdin.on('data', (buff) => {
     const content : String = buff.toString('utf-8');
-    client.write(content + " from debugAdapter\n")
+    client.write(content + " from VSCode\n")
 })

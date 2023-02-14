@@ -1,6 +1,8 @@
 import * as path from 'path';
 import { workspace, commands, window, debug,
 	ExtensionContext, Terminal, ConfigurationScope, DebugConfiguration} from 'vscode';
+import { WorkspaceFolder, ProviderResult, CancellationToken } from 'vscode';
+
 
 import * as vscode from 'vscode';
 
@@ -78,17 +80,22 @@ function runSnailFile() {
 }
 
 function debugSnailFile(resource : vscode.Uri) {
-	console.log("debugging a snail file!");
+	
+	if (!resource && vscode.window.activeTextEditor) {
+		resource = vscode.window.activeTextEditor.document.uri;
+	}
+
 	let config : DebugConfiguration = {
 		name: "Launch Snail Debug",
 		request: "launch",
 		type: "snail",
-		program: resource.path
+		program: resource.fsPath
 	};
+
 	// this line ends up calling 'node client/out/debugAdapter.js'
 	// so I think we need to find a way to launch snail in 'debug mode' ( instead of our nc -l 9999 ) here
 	// 		or right when we launch debugAdapter.js
-	debug.startDebugging(undefined, config);
+	debug.startDebugging(undefined, config);	
 }
 
 export function deactivate(): Thenable<void> | undefined {
