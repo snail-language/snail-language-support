@@ -416,3 +416,11 @@ run and debug button in run and debug side menu doesn't start debugging
 debug icon in top right while editing a file DOES start debugging
 launching from default configuration works DOES start debugging (not sure if it starts debugging in the correct file though, might just be starting a debug session)
 debug from command pallette DOES start debugging
+
+## 02/16/23
+
+Fixed a cool bug in language server protocol where vscode was expecting certain
+functionality 'textDocument/onCompletion' because we were passing certain 
+capabilities when we intialize our language server. 
+- [relevant commit](https://github.com/snail-language/snail-language-support/commit/f3d044d876f964f7dd282d5811d3cc264f0e56b8)
+- [lsp blog](https://code.visualstudio.com/api/language-extensions/language-server-extension-guide#adding-additional-language-features)
