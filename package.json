@@ -31,7 +31,11 @@
         "extensions": [
           ".sl"
         ],
-        "configuration": "./configurations/language-configuration.json"
+        "configuration": "./configurations/language-configuration.json",
+        "icon": {
+          "light": "./icons/snail.png",
+          "dark": "./icons/snail.png"
+        }
       }
     ],
     "grammars": [
