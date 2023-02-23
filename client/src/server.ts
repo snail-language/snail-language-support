@@ -24,6 +24,10 @@ import {
 	rmSync
 } from 'node:fs';
 
+import * as os from 'node:os';
+
+import * as path from 'node:path';
+
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
 const connection = createConnection(ProposedFeatures.all);
@@ -143,8 +147,9 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 	const text: string = textDocument.getText().replace(/\n/gm, "\n");
 
 	// create temp dir and temp file
-	const dir: string = mkdtempSync('tmp-');
-	const filename: string = dir + '/tmp.sl';
+	const osTmpDir : string = os.tmpdir();
+	const tmpDir: string = mkdtempSync(path.join(osTmpDir));
+	const filename: string = path.join(tmpDir, 'tmp.sl');
 	writeFileSync(filename, text);
 
 	const diagnostics: Diagnostic[] = [];
@@ -178,7 +183,7 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 	connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
 
 	// remove our temporary directory
-	rmSync(dir, { recursive: true, force: true });
+	rmSync(tmpDir, { recursive: true, force: true });
 }
 
 connection.onDidChangeWatchedFiles(_change => {
