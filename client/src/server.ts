@@ -150,7 +150,7 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 	const diagnostics: Diagnostic[] = [];
 
 	// run the snail file
-	const snailPath = settings.snailPath;
+	const snailPath = validateSnailPath(settings.snailPath);
 	const child = spawnSync( snailPath, ['-s', filename]);
 	const err_msg = child.stdout.toString();
 
@@ -179,6 +179,20 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 
 	// remove our temporary directory
 	rmSync(dir, { recursive: true, force: true });
+}
+
+function validateSnailPath(path : string) : string {
+	// check that snail path in settings exists and supports snail language server functionality
+
+	// something like 'which snailPath' and check return status
+	// to verify existence
+
+	// something like 'snailPath -s' and check return status
+	// to verify language server support
+
+	// throw a nice vscode error
+
+	return "NOT IMPLEMENTED";
 }
 
 connection.onDidChangeWatchedFiles(_change => {
