@@ -151,8 +151,7 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 
 	// run the snail file
 	const snailPath = settings.snailPath;
-	const snailPathDev = '/Users/charliereinhardt/Documents/Coursework/Fall2022/snail/snail/_esy/default/build/install/default/bin/snail';
-	const child = spawnSync( snailPathDev, ['-s', filename]);
+	const child = spawnSync( snailPath, ['-s', filename]);
 	const err_msg = child.stdout.toString();
 
 	// extract error information:
