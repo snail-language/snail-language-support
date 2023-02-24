@@ -190,14 +190,15 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 
 function isValidSnailPath(path : string) : boolean {
 	// TODO optimize boolean logic return statements
+	// TODO fs.access()
 	const whichSnail = spawnSync('which', [path]);
 	const exitCode : Number | null = whichSnail.status;
 	if (exitCode != 0) {
 		return false;
 	};
 
-	const snailCapabilities = spawnSync(path, ['-h']).
-		stdout.toString()
+	const snailCapabilities = spawnSync(path, ['-h'])
+		.stdout.toString()
 		.split("\n")
 		.map((item, _idx, _arr) => {
 			return item.trim().split(' ')[0];
