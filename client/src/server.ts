@@ -15,6 +15,7 @@ import {
 } from 'vscode-languageserver-textdocument';
 
 import {
+	spawn,
 	spawnSync
 } from 'child_process';
 
@@ -150,7 +151,13 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 	const diagnostics: Diagnostic[] = [];
 
 	// run the snail file
-	const snailPath = validateSnailPath(settings.snailPath);
+
+	const snailPath = settings.snailPath;
+	if (!isValidSnailPath(snailPath)) {
+		// TODO actually show a nice error message
+		console.log("show error message");
+		return;
+	}
 	const child = spawnSync( snailPath, ['-s', filename]);
 	const err_msg = child.stdout.toString();
 
@@ -181,18 +188,25 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 	rmSync(dir, { recursive: true, force: true });
 }
 
-function validateSnailPath(path : string) : string {
-	// check that snail path in settings exists and supports snail language server functionality
+function isValidSnailPath(path : string) : boolean {
+	// TODO optimize boolean logic return statements
+	const whichSnail = spawnSync('which', [path]);
+	const exitCode : Number | null = whichSnail.status;
+	if (exitCode != 0) {
+		return false;
+	};
 
-	// something like 'which snailPath' and check return status
-	// to verify existence
+	const snailCapabilities = spawnSync(path, ['-h']).
+		stdout.toString()
+		.split("\n")
+		.map((item, _idx, _arr) => {
+			return item.trim().split(' ')[0];
+		});
+	if (!snailCapabilities.includes('-s')) {
+		return false
+	}
 
-	// something like 'snailPath -s' and check return status
-	// to verify language server support
-
-	// throw a nice vscode error
-
-	return "NOT IMPLEMENTED";
+	return true;
 }
 
 connection.onDidChangeWatchedFiles(_change => {
