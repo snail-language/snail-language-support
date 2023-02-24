@@ -147,6 +147,7 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 	const text: string = textDocument.getText().replace(/\n/gm, "\n");
 
 	// create temp dir and temp file
+	// echo $TMPDIR
 	const osTmpDir : string = os.tmpdir();
 	const tmpDir: string = mkdtempSync(path.join(osTmpDir));
 	const filename: string = path.join(tmpDir, 'tmp.sl');
