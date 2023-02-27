@@ -22,8 +22,12 @@ import {
 import {
 	writeFileSync,
 	mkdtempSync,
-	rmSync
+	rmSync,
+	accessSync,
+	constants
 } from 'node:fs';
+
+import * as fs from 'node:fs';
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -140,6 +144,14 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 	// In this simple example we get the settings for every validate run.
 	const settings = await getDocumentSettings(textDocument.uri);
 
+	// get path to snail from extension settings
+	const snailPath = settings.snailPath;
+	
+	// if the snail path is not valid, abandon the validation process
+	if (!isValidSnailPath(snailPath)) {
+		return;
+	}
+
 	// run the current snail file and return error messages
 	const text: string = textDocument.getText().replace(/\n/gm, "\n");
 
@@ -151,13 +163,6 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 	const diagnostics: Diagnostic[] = [];
 
 	// run the snail file
-
-	const snailPath = settings.snailPath;
-	if (!isValidSnailPath(snailPath)) {
-		// TODO actually show a nice error message
-		console.log("show error message");
-		return;
-	}
 	const child = spawnSync( snailPath, ['-s', filename]);
 	const err_msg = child.stdout.toString();
 
@@ -189,13 +194,23 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 }
 
 function isValidSnailPath(path : string) : boolean {
-	// TODO optimize boolean logic return statements
-	// TODO fs.access()
-	const whichSnail = spawnSync('which', [path]);
-	const exitCode : Number | null = whichSnail.status;
-	if (exitCode != 0) {
+	try {
+		fs.accessSync(path, constants.F_OK);
+	} catch (err) {
+		// TODO display nice error message w/ link to settings
+		console.log("file path to snail doesn't exist: ", path);
+		console.log(err);
 		return false;
-	};
+	}
+
+	try {
+		fs.accessSync(path, fs.constants.X_OK);
+	} catch (err) {
+		// TODO display nice error message w/ link to settings
+		console.log("user does not have execute privelege on snail path: ", path);
+		console.log(err);
+		return false
+	}
 
 	const snailCapabilities = spawnSync(path, ['-h'])
 		.stdout.toString()
@@ -203,7 +218,9 @@ function isValidSnailPath(path : string) : boolean {
 		.map((item, _idx, _arr) => {
 			return item.trim().split(' ')[0];
 		});
+
 	if (!snailCapabilities.includes('-s')) {
+		// TODO display nice error message w/ link to settings
 		return false
 	}
 
