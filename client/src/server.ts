@@ -10,9 +10,15 @@ import {
 	InitializeResult
 } from 'vscode-languageserver/node';
 
+import * as lsp from 'vscode-languageserver/node';
+
 import {
 	TextDocument
 } from 'vscode-languageserver-textdocument';
+
+// for some reason, when we run our extension, server.ts doesn't have 
+// access to the vscode module or something
+import * as vscode from 'vscode';
 
 import {
 	spawn,
@@ -198,6 +204,7 @@ function isValidSnailPath(path : string) : boolean {
 		fs.accessSync(path, constants.F_OK);
 	} catch (err) {
 		// TODO display nice error message w/ link to settings
+		// vscode.window.showErrorMessage("file path to snail doesn't exist");
 		console.log("file path to snail doesn't exist: ", path);
 		console.log(err);
 		return false;

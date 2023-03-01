@@ -21,6 +21,11 @@ let DEBUG_SNAIL_FILE_CMD = 'snail-language-support.debugSnailFile';
 
 export function activate(context: ExtensionContext) {
 
+	// TODO maybe validate snail path here? instead of inside language server?
+	// this would give us more access to vscode client possibilities (like error displays)
+	// and we could possibly try to stop ourselves from even launching the language
+	// server if we don't get a good snail path. I am liking this idea.
+
 	context.subscriptions.push(commands.registerCommand(RUN_SNAIL_FILE_CMD, runSnailFile));
 	context.subscriptions.push(commands.registerCommand(DEBUG_SNAIL_FILE_CMD, debugSnailFile));
 
