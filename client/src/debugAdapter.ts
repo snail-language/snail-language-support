@@ -13,6 +13,7 @@ f.writeFileSync(file2, 'Debug Input\n');
 
 
 const PORT_NUM = 9999;
+// start our socket client
 var client = s.connect(PORT_NUM, 'localhost', () => {
     f.appendFileSync(file, "debugAdapter connected\n")
 });
@@ -28,6 +29,8 @@ client.on('error', (err) => {
     f.writeFileSync(file, err.toString());
 })
 
+
+// register input from vscode
 process.stdin.on('data', (buff) => {
     const content : String = buff.toString('utf-8');
     client.write(content + " from VSCode\n")
