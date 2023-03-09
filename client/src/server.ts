@@ -1,3 +1,7 @@
+// for some reason, when we run our extension, server.ts doesn't have 
+// access to the vscode module or something
+import * as vscode from 'vscode';
+
 import {
 	createConnection,
 	TextDocuments,
@@ -15,10 +19,6 @@ import * as lsp from 'vscode-languageserver/node';
 import {
 	TextDocument
 } from 'vscode-languageserver-textdocument';
-
-// for some reason, when we run our extension, server.ts doesn't have 
-// access to the vscode module or something
-import * as vscode from 'vscode';
 
 import {
 	spawn,
@@ -152,11 +152,6 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 
 	// get path to snail from extension settings
 	const snailPath = settings.snailPath;
-	
-	// if the snail path is not valid, abandon the validation process
-	if (!isValidSnailPath(snailPath)) {
-		return;
-	}
 
 	// run the current snail file and return error messages
 	const text: string = textDocument.getText().replace(/\n/gm, "\n");
@@ -197,41 +192,6 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 
 	// remove our temporary directory
 	rmSync(dir, { recursive: true, force: true });
-}
-
-function isValidSnailPath(path : string) : boolean {
-	try {
-		fs.accessSync(path, constants.F_OK);
-	} catch (err) {
-		// TODO display nice error message w/ link to settings
-		// vscode.window.showErrorMessage("file path to snail doesn't exist");
-		console.log("file path to snail doesn't exist: ", path);
-		console.log(err);
-		return false;
-	}
-
-	try {
-		fs.accessSync(path, fs.constants.X_OK);
-	} catch (err) {
-		// TODO display nice error message w/ link to settings
-		console.log("user does not have execute privelege on snail path: ", path);
-		console.log(err);
-		return false
-	}
-
-	const snailCapabilities = spawnSync(path, ['-h'])
-		.stdout.toString()
-		.split("\n")
-		.map((item, _idx, _arr) => {
-			return item.trim().split(' ')[0];
-		});
-
-	if (!snailCapabilities.includes('-s')) {
-		// TODO display nice error message w/ link to settings
-		return false
-	}
-
-	return true;
 }
 
 connection.onDidChangeWatchedFiles(_change => {

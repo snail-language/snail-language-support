@@ -1,8 +1,6 @@
 import * as path from 'path';
 import { workspace, commands, window, debug,
 	ExtensionContext, Terminal, ConfigurationScope, DebugConfiguration} from 'vscode';
-import { WorkspaceFolder, ProviderResult, CancellationToken } from 'vscode';
-
 
 import * as vscode from 'vscode';
 
@@ -13,6 +11,9 @@ import {
 	TransportKind,
 } from 'vscode-languageclient/node';
 
+import * as fs from 'node:fs';
+import * as cp from 'node:child_process';
+
 let client: LanguageClient;
 
 let snailTerminal : Terminal;
@@ -21,10 +22,13 @@ let DEBUG_SNAIL_FILE_CMD = 'snail-language-support.debugSnailFile';
 
 export function activate(context: ExtensionContext) {
 
-	// TODO maybe validate snail path here? instead of inside language server?
-	// this would give us more access to vscode client possibilities (like error displays)
-	// and we could possibly try to stop ourselves from even launching the language
-	// server if we don't get a good snail path. I am liking this idea.
+	let snailPath : string = vscode.workspace.getConfiguration('snailLanguageServer').snailPath;
+	let resp = validateSnailPath(snailPath);
+	if (resp.status == "ERROR") {
+		// TODO add a link to settings
+		vscode.window.showErrorMessage(resp.message);
+		return;
+	}
 
 	context.subscriptions.push(commands.registerCommand(RUN_SNAIL_FILE_CMD, runSnailFile));
 	context.subscriptions.push(commands.registerCommand(DEBUG_SNAIL_FILE_CMD, debugSnailFile));
@@ -68,6 +72,55 @@ export function activate(context: ExtensionContext) {
 
 	// Start the client. This will also launch the server
 	client.start();
+}
+
+function validateSnailPath(path : string) {
+	let error_code : string = "ERROR";
+	let success_code : string = "OK";
+	try {
+		fs.accessSync(path, fs.constants.F_OK);
+	} catch (err) {
+		let message : string = "file path to snail doesn't exist: " + path;
+		return {
+			status: error_code,
+			message: message,
+			body: err
+		}
+	}
+
+	try {
+		fs.accessSync(path, fs.constants.X_OK);
+	} catch (err) {
+		let message = "user does not have execute privelege on snail path: " + path;
+		return {
+			status: error_code,
+			message: message,
+			body: err
+		}
+	}
+
+	const snailCapabilities = cp.spawnSync(path, ['-h'])
+		.stdout.toString()
+		.split("\n")
+		.map((item, _idx, _arr) => {
+			return item.trim().split(' ')[0];
+		});
+
+	if (!snailCapabilities.includes('-s')) {
+		let message : string = "This version of snail does not support language server capabilities: " + path;
+		return {
+			status: error_code,
+			message: message,
+			body: null
+		}
+	}
+
+	let message : string = "yay";
+	return {
+		status: success_code,
+		message: message,
+		body: null
+	}	
 }
 
 function runSnailFile() {
