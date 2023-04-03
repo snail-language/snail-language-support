@@ -1,8 +1,6 @@
 import * as path from 'path';
 import { workspace, commands, window, debug,
 	ExtensionContext, Terminal, ConfigurationScope, DebugConfiguration} from 'vscode';
-import { WorkspaceFolder, ProviderResult, CancellationToken } from 'vscode';
-
 
 import * as vscode from 'vscode';
 
@@ -13,13 +11,33 @@ import {
 	TransportKind,
 } from 'vscode-languageclient/node';
 
+import * as fs from 'node:fs';
+import * as cp from 'node:child_process';
+
 let client: LanguageClient;
 
 let snailTerminal : Terminal;
 let RUN_SNAIL_FILE_CMD = 'snail-language-support.runSnailFile';
 let DEBUG_SNAIL_FILE_CMD = 'snail-language-support.debugSnailFile';
+let OPEN_SETTINGS_ACTION = 'Open settings';
+let OPEN_SETTINGS_CMD = 'workbench.action.openSettings';
 
 export function activate(context: ExtensionContext) {
+
+	let snailPath : string = vscode.workspace.getConfiguration('snailLanguageServer').snailPath;
+	let resp = validateSnailPath(snailPath);
+	if (resp.status == "ERROR") {
+
+		const errorMessage = vscode.window.showErrorMessage(resp.message, OPEN_SETTINGS_ACTION);
+		errorMessage.then(choice => {
+			if (choice === OPEN_SETTINGS_ACTION) {
+				vscode.commands.executeCommand(
+					OPEN_SETTINGS_CMD, 
+					'snailLanguageServer.snailPath');
+			}
+		})
+		return;
+	}
 
 	context.subscriptions.push(commands.registerCommand(RUN_SNAIL_FILE_CMD, runSnailFile));
 	context.subscriptions.push(commands.registerCommand(DEBUG_SNAIL_FILE_CMD, debugSnailFile));
@@ -63,6 +81,61 @@ export function activate(context: ExtensionContext) {
 
 	// Start the client. This will also launch the server
 	client.start();
+
+	// TODO incorporate snail path checking and updating into language server
+	// client.onNotification("snail-language-support/badSnailPath", (msg) => {
+	// 	vscode.window.showErrorMessage("snail-language-support/badSnailPath notification recieved");
+	// });
+
+}
+
+function validateSnailPath(path : string) {
+	let error_code : string = "ERROR";
+	let success_code : string = "OK";
+	try {
+		fs.accessSync(path, fs.constants.F_OK);
+	} catch (err) {
+		let message : string = "File path to snail doesn't exist: " + path;
+		return {
+			status: error_code,
+			message: message,
+			body: err
+		}
+	}
+
+	try {
+		fs.accessSync(path, fs.constants.X_OK);
+	} catch (err) {
+		let message = "User does not have execute privelege on snail path: " + path;
+		return {
+			status: error_code,
+			message: message,
+			body: err
+		}
+	}
+
+	const snailCapabilities = cp.spawnSync(path, ['-h'])
+		.stdout.toString()
+		.split("\n")
+		.map((item, _idx, _arr) => {
+			return item.trim().split(' ')[0];
+		});
+
+	if (!snailCapabilities.includes('-s')) {
+		let message : string = "This version of snail does not support language server capabilities: " + path;
+		return {
+			status: error_code,
+			message: message,
+			body: null
+		}
+	}
+
+	let message : string = "yay";
+	return {
+		status: success_code,
+		message: message,
+		body: null
+	}	
 }
 
 function runSnailFile() {
