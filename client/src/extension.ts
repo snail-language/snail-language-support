@@ -19,14 +19,23 @@ let client: LanguageClient;
 let snailTerminal : Terminal;
 let RUN_SNAIL_FILE_CMD = 'snail-language-support.runSnailFile';
 let DEBUG_SNAIL_FILE_CMD = 'snail-language-support.debugSnailFile';
+let OPEN_SETTINGS_ACTION = 'Open settings';
+let OPEN_SETTINGS_CMD = 'workbench.action.openSettings';
 
 export function activate(context: ExtensionContext) {
 
 	let snailPath : string = vscode.workspace.getConfiguration('snailLanguageServer').snailPath;
 	let resp = validateSnailPath(snailPath);
 	if (resp.status == "ERROR") {
-		// TODO add a link to settings
-		vscode.window.showErrorMessage(resp.message);
+
+		const errorMessage = vscode.window.showErrorMessage(resp.message, OPEN_SETTINGS_ACTION);
+		errorMessage.then(choice => {
+			if (choice === OPEN_SETTINGS_ACTION) {
+				vscode.commands.executeCommand(
+					OPEN_SETTINGS_CMD, 
+					'snailLanguageServer.snailPath');
+			}
+		})
 		return;
 	}
 
@@ -72,6 +81,12 @@ export function activate(context: ExtensionContext) {
 
 	// Start the client. This will also launch the server
 	client.start();
+
+	// TODO incorporate snail path checking and updating into language server
+	// client.onNotification("snail-language-support/badSnailPath", (msg) => {
+	// 	vscode.window.showErrorMessage("snail-language-support/badSnailPath notification recieved");
+	// });
+
 }
 
 function validateSnailPath(path : string) {
@@ -80,7 +95,7 @@ function validateSnailPath(path : string) {
 	try {
 		fs.accessSync(path, fs.constants.F_OK);
 	} catch (err) {
-		let message : string = "file path to snail doesn't exist: " + path;
+		let message : string = "File path to snail doesn't exist: " + path;
 		return {
 			status: error_code,
 			message: message,
@@ -91,7 +106,7 @@ function validateSnailPath(path : string) {
 	try {
 		fs.accessSync(path, fs.constants.X_OK);
 	} catch (err) {
-		let message = "user does not have execute privelege on snail path: " + path;
+		let message = "User does not have execute privelege on snail path: " + path;
 		return {
 			status: error_code,
 			message: message,

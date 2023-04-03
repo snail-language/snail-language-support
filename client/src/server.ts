@@ -1,7 +1,3 @@
-// for some reason, when we run our extension, server.ts doesn't have 
-// access to the vscode module or something
-import * as vscode from 'vscode';
-
 import {
 	createConnection,
 	TextDocuments,
@@ -114,6 +110,8 @@ connection.onDidChangeConfiguration(change => {
 			(change.settings.snailLanguageServer || defaultSettings)
 		);
 	}
+	// TODO incorporate snail path checking and updating into language server
+	// connection.sendNotification("snail-language-support/badSnailPath", "message");
 
 	// Revalidate all open text documents
 	documents.all().forEach(validateTextDocument);
@@ -131,6 +129,7 @@ function getDocumentSettings(resource: string): Thenable<ExtensionSettings> {
 		});
 		documentSettings.set(resource, result);
 	}
+
 	return result;
 }
 
