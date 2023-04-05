@@ -29,7 +29,10 @@ import {
 	constants
 } from 'node:fs';
 
+import * as os from 'node:os';
+import * as path from 'node:path';
 import * as fs from 'node:fs';
+
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -156,41 +159,50 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 	const text: string = textDocument.getText().replace(/\n/gm, "\n");
 
 	// create temp dir and temp file
-	const dir: string = mkdtempSync('tmp-');
-	const filename: string = dir + '/tmp.sl';
+	// echo $TMPDIR
+	const osTmpDir : string = os.tmpdir();
+	const tmpDir: string = mkdtempSync(path.join(osTmpDir));
+	const filename: string = path.join(tmpDir, 'tmp.sl');
 	writeFileSync(filename, text);
-
-	const diagnostics: Diagnostic[] = [];
-
-	// run the snail file
-	const child = spawnSync( snailPath, ['-s', filename]);
-	const err_msg = child.stdout.toString();
-
-	// extract error information:
-	const err_json = JSON.parse(err_msg);
 	
-	let problems = 0;
-	if (err_json.status == 'ERROR' && problems < settings.maxNumberOfProblems) {
-		problems++;
-		const err_start = err_json.location.offset_start
-		const err_end = err_json.location.offset_end
-		const diagnostic: Diagnostic = {
-			severity: DiagnosticSeverity.Error,
-			range: {
-				start: textDocument.positionAt(err_start),
-				end: textDocument.positionAt(err_end)
-			},
-			message: err_json.message,
-			source: "Snail " + err_json.type
-		};
-		diagnostics.push(diagnostic);
+	try {
+
+		const diagnostics: Diagnostic[] = [];
+
+		// run the snail file
+		const snailPath = settings.snailPath;
+		const child = spawnSync( snailPath, ['-s', filename]);
+		const err_msg = child.stdout.toString();
+
+		// extract error information:
+		const err_json = JSON.parse(err_msg);
+		
+		let problems = 0;
+		if (err_json.status == 'ERROR' && problems < settings.maxNumberOfProblems) {
+			problems++;
+			const err_start = err_json.location.offset_start
+			const err_end = err_json.location.offset_end
+			const diagnostic: Diagnostic = {
+				severity: DiagnosticSeverity.Error,
+				range: {
+					start: textDocument.positionAt(err_start),
+					end: textDocument.positionAt(err_end)
+				},
+				message: err_json.message,
+				source: "Snail " + err_json.type
+			};
+			diagnostics.push(diagnostic);
+		}
+	
+		// Send the computed diagnostics to VSCode.
+		connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
+	} catch (e) {
+		throw e;
+	} finally {
+		// remove our temporary directory
+		rmSync(tmpDir, { recursive: true, force: true });
 	}
-
-	// Send the computed diagnostics to VSCode.
-	connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
-
-	// remove our temporary directory
-	rmSync(dir, { recursive: true, force: true });
+	
 }
 
 connection.onDidChangeWatchedFiles(_change => {
