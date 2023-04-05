@@ -3,48 +3,38 @@
 // is running separately in node
 
 import * as s from 'net';
-import * as cp from 'node:child_process';
+import * as f from 'fs';
+import * as path from 'path';
+
+// FIXME debugging
+const base = path.join(__dirname, "../../");
+const response_file = `${base}/stderr.txt`;
+const sent_file = `${base}/stdin.txt`;
+f.writeFileSync(response_file, 'Debug Output\n');
+f.writeFileSync(sent_file, 'Debug Input\n');
 
 
 const PORT_NUM = 9999;
-
-// start our "socket server" (nc -l, snail --debug)
-var nc : cp.ChildProcess = cp.spawn('nc', ['-l', PORT_NUM.toString()], {
-    stdio: [null, null, null]
-});
-
-nc.on('spawn', () => {
-    console.log("Successfully spawned socket server!");
-})
-
-nc.stdout?.on('data', (buff) => {
-    const content : String = buff.toString('utf-8');
-    nc.stdin?.write(content + "from nc stdout\n");
-});
-
-nc.on('error', (err) => {
-    console.log("Error! from netcat");
-    console.log(err);
-});
-
 // start our socket client
 var client = s.connect(PORT_NUM, 'localhost', () => {
-    console.error("debugAdapter connected");    
+    f.appendFileSync(response_file, "debugAdapter connected\n")
 });
 
 client.on('data', (buff) => {
     const content : String = buff.toString('utf-8');
-    console.log(content + "from tcp");
+    console.log(content);
+    f.appendFileSync(response_file, content.toString() + "\n");
 })
 
 client.on('error', (err) => {
-    console.log("Error! from client");
-    console.log(err);
+    f.appendFileSync(response_file, "Error!\n");
+    f.appendFileSync(response_file, err.toString() + "\n");
 })
 
 
 // register input from vscode
 process.stdin.on('data', (buff) => {
     const content : String = buff.toString('utf-8');
-    client.write(content + "from VSCode\n")
+    client.write(content.toString());
+    f.appendFileSync(sent_file, content.toString() + "\n");
 })

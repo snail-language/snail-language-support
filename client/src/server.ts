@@ -10,23 +10,29 @@ import {
 	InitializeResult
 } from 'vscode-languageserver/node';
 
+import * as lsp from 'vscode-languageserver/node';
+
 import {
 	TextDocument
 } from 'vscode-languageserver-textdocument';
 
 import {
+	spawn,
 	spawnSync
 } from 'child_process';
 
 import {
 	writeFileSync,
 	mkdtempSync,
-	rmSync
+	rmSync,
+	accessSync,
+	constants
 } from 'node:fs';
 
 import * as os from 'node:os';
-
 import * as path from 'node:path';
+import * as fs from 'node:fs';
+
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -107,6 +113,8 @@ connection.onDidChangeConfiguration(change => {
 			(change.settings.snailLanguageServer || defaultSettings)
 		);
 	}
+	// TODO incorporate snail path checking and updating into language server
+	// connection.sendNotification("snail-language-support/badSnailPath", "message");
 
 	// Revalidate all open text documents
 	documents.all().forEach(validateTextDocument);
@@ -124,6 +132,7 @@ function getDocumentSettings(resource: string): Thenable<ExtensionSettings> {
 		});
 		documentSettings.set(resource, result);
 	}
+
 	return result;
 }
 
@@ -142,6 +151,9 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 	// TODO is there another way to do it?
 	// In this simple example we get the settings for every validate run.
 	const settings = await getDocumentSettings(textDocument.uri);
+
+	// get path to snail from extension settings
+	const snailPath = settings.snailPath;
 
 	// run the current snail file and return error messages
 	const text: string = textDocument.getText().replace(/\n/gm, "\n");

@@ -427,3 +427,14 @@ capabilities when we intialize our language server.
 
 Worked on starting a child process with nodejs when we launch our debugAdapter
 - [child process docs](https://nodejs.org/api/child_process.html#child-process)
+
+## 02/27/23
+
+Icons for snail files
+- https://code.visualstudio.com/api/references/contribution-points#contributes.languages
+
+lwt manual
+http://ocsigen.org/lwt/3.2.1/manual/manual
+
+fs.access()
+https://nodejs.org/api/fs.html#fsaccesspath-mode-callback
