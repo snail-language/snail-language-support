@@ -81,12 +81,6 @@ export function activate(context: ExtensionContext) {
 
 	// Start the client. This will also launch the server
 	client.start();
-
-	// TODO incorporate snail path checking and updating into language server
-	// client.onNotification("snail-language-support/badSnailPath", (msg) => {
-	// 	vscode.window.showErrorMessage("snail-language-support/badSnailPath notification recieved");
-	// });
-
 }
 
 function validateSnailPath(path : string) {
@@ -145,8 +139,6 @@ function runSnailFile() {
 	snailTerminal.show();
 
 	const filePath : String | undefined = window.activeTextEditor?.document.fileName;
-	// TODO deal with scope?
-	let scope : ConfigurationScope;
 	let snailPath : String = workspace.getConfiguration('snailLanguageServer').snailPath;
 
 	snailTerminal.sendText(snailPath + ' ' + filePath)
@@ -165,9 +157,7 @@ function debugSnailFile(resource : vscode.Uri) {
 		program: resource.fsPath
 	};
 
-	// this line ends up calling 'node client/out/debugAdapter.js'
-	// so I think we need to find a way to launch snail in 'debug mode' ( instead of our nc -l 9999 ) here
-	// 		or right when we launch debugAdapter.js
+	// this line calls 'node client/out/debugAdapter.js'
 	debug.startDebugging(undefined, config);	
 }
 

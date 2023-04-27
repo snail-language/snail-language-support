@@ -113,9 +113,7 @@ connection.onDidChangeConfiguration(change => {
 			(change.settings.snailLanguageServer || defaultSettings)
 		);
 	}
-	// TODO incorporate snail path checking and updating into language server
-	// connection.sendNotification("snail-language-support/badSnailPath", "message");
-
+	
 	// Revalidate all open text documents
 	documents.all().forEach(validateTextDocument);
 });
@@ -159,7 +157,6 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 	const text: string = textDocument.getText().replace(/\n/gm, "\n");
 
 	// create temp dir and temp file
-	// echo $TMPDIR
 	const osTmpDir : string = os.tmpdir();
 	const tmpDir: string = mkdtempSync(path.join(osTmpDir));
 	const filename: string = path.join(tmpDir, 'tmp.sl');
