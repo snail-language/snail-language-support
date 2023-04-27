@@ -339,7 +339,6 @@ Tried to make some progress on giving the runSnailFile command actual behavior. 
 ## 01/25/22
 
 Goal today is to get into some tcp/socket programming. First, some youtube videos and articles about what tcp/socket programming actually is. Here are some of the videos I watched
-- [Socket programming in C]()
 
 ## 01/26/22
 
