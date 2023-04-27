@@ -1,51 +1,26 @@
-import {
-	createConnection,
-	TextDocuments,
-	Diagnostic,
-	DiagnosticSeverity,
-	ProposedFeatures,
-	InitializeParams,
-	DidChangeConfigurationNotification,
-	TextDocumentSyncKind,
-	InitializeResult
-} from 'vscode-languageserver/node';
-
-import * as lsp from 'vscode-languageserver/node';
+import * as cp from 'node:child_process';
+import * as f from 'node:fs';
+import * as ls from 'vscode-languageserver/node';
+import * as os from 'node:os';
+import * as path from 'node:path';
 
 import {
 	TextDocument
 } from 'vscode-languageserver-textdocument';
 
-import {
-	spawn,
-	spawnSync
-} from 'child_process';
-
-import {
-	writeFileSync,
-	mkdtempSync,
-	rmSync,
-	accessSync,
-	constants
-} from 'node:fs';
-
-import * as os from 'node:os';
-import * as path from 'node:path';
-import * as fs from 'node:fs';
-
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
-const connection = createConnection(ProposedFeatures.all);
+const connection = ls.createConnection(ls.ProposedFeatures.all);
 
 // Create a simple text document manager.
-const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
+const documents: ls.TextDocuments<TextDocument> = new ls.TextDocuments(TextDocument);
 
 let hasConfigurationCapability = false;
 let hasWorkspaceFolderCapability = false;
 let hasDiagnosticRelatedInformationCapability = false;
 
-connection.onInitialize((params: InitializeParams) => {
+connection.onInitialize((params: ls.InitializeParams) => {
 	const capabilities = params.capabilities;
 
 	// Does the client support the `workspace/configuration` request?
@@ -62,9 +37,9 @@ connection.onInitialize((params: InitializeParams) => {
 		capabilities.textDocument.publishDiagnostics.relatedInformation
 	);
 
-	const result: InitializeResult = {
+	const result: ls.InitializeResult = {
 		capabilities: {
-			textDocumentSync: TextDocumentSyncKind.Incremental,
+			textDocumentSync: ls.TextDocumentSyncKind.Incremental,
 		}
 	};
 	if (hasWorkspaceFolderCapability) {
@@ -80,7 +55,7 @@ connection.onInitialize((params: InitializeParams) => {
 connection.onInitialized(() => {
 	if (hasConfigurationCapability) {
 		// Register for all configuration changes.
-		connection.client.register(DidChangeConfigurationNotification.type, undefined);
+		connection.client.register(ls.DidChangeConfigurationNotification.type, undefined);
 	}
 	if (hasWorkspaceFolderCapability) {
 		connection.workspace.onDidChangeWorkspaceFolders(_event => {
@@ -158,17 +133,17 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 
 	// create temp dir and temp file
 	const osTmpDir : string = os.tmpdir();
-	const tmpDir: string = mkdtempSync(path.join(osTmpDir));
+	const tmpDir: string = f.mkdtempSync(path.join(osTmpDir));
 	const filename: string = path.join(tmpDir, 'tmp.sl');
-	writeFileSync(filename, text);
+	f.writeFileSync(filename, text);
 	
 	try {
 
-		const diagnostics: Diagnostic[] = [];
+		const diagnostics: ls.Diagnostic[] = [];
 
 		// run the snail file
 		const snailPath = settings.snailPath;
-		const child = spawnSync( snailPath, ['-s', filename]);
+		const child = cp.spawnSync( snailPath, ['-s', filename]);
 		const err_msg = child.stdout.toString();
 
 		// extract error information:
@@ -179,8 +154,8 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 			problems++;
 			const err_start = err_json.location.offset_start
 			const err_end = err_json.location.offset_end
-			const diagnostic: Diagnostic = {
-				severity: DiagnosticSeverity.Error,
+			const diagnostic: ls.Diagnostic = {
+				severity: ls.DiagnosticSeverity.Error,
 				range: {
 					start: textDocument.positionAt(err_start),
 					end: textDocument.positionAt(err_end)
@@ -197,7 +172,7 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 		throw e;
 	} finally {
 		// remove our temporary directory
-		rmSync(tmpDir, { recursive: true, force: true });
+		f.rmSync(tmpDir, { recursive: true, force: true });
 	}
 	
 }

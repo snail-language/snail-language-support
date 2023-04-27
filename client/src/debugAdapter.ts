@@ -2,8 +2,8 @@
 // i.e. we do not have access to vscode apis, because this
 // is running separately in node
 
-import * as s from 'net';
 import * as f from 'fs';
+import * as s from 'net';
 import * as path from 'path';
 
 // FIXME debugging

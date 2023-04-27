@@ -1,37 +1,28 @@
-import * as path from 'path';
-import { workspace, commands, window, debug,
-	ExtensionContext, Terminal, ConfigurationScope, DebugConfiguration} from 'vscode';
-
-import * as vscode from 'vscode';
-
-import {
-	LanguageClient,
-	LanguageClientOptions,
-	ServerOptions,
-	TransportKind,
-} from 'vscode-languageclient/node';
-
-import * as fs from 'node:fs';
 import * as cp from 'node:child_process';
+import * as f from 'node:fs';
+import * as lc from 'vscode-languageclient/node';
+import * as path from 'path';
+import * as v from 'vscode';
 
-let client: LanguageClient;
 
-let snailTerminal : Terminal;
+let client: lc.LanguageClient;
+
+let snailTerminal : v.Terminal;
 let RUN_SNAIL_FILE_CMD = 'snail-language-support.runSnailFile';
 let DEBUG_SNAIL_FILE_CMD = 'snail-language-support.debugSnailFile';
 let OPEN_SETTINGS_ACTION = 'Open settings';
 let OPEN_SETTINGS_CMD = 'workbench.action.openSettings';
 
-export function activate(context: ExtensionContext) {
+export function activate(context: v.ExtensionContext) {
 
-	let snailPath : string = vscode.workspace.getConfiguration('snailLanguageServer').snailPath;
+	let snailPath : string = v.workspace.getConfiguration('snailLanguageServer').snailPath;
 	let resp = validateSnailPath(snailPath);
 	if (resp.status == "ERROR") {
 
-		const errorMessage = vscode.window.showErrorMessage(resp.message, OPEN_SETTINGS_ACTION);
+		const errorMessage = v.window.showErrorMessage(resp.message, OPEN_SETTINGS_ACTION);
 		errorMessage.then(choice => {
 			if (choice === OPEN_SETTINGS_ACTION) {
-				vscode.commands.executeCommand(
+				v.commands.executeCommand(
 					OPEN_SETTINGS_CMD, 
 					'snailLanguageServer.snailPath');
 			}
@@ -39,8 +30,8 @@ export function activate(context: ExtensionContext) {
 		return;
 	}
 
-	context.subscriptions.push(commands.registerCommand(RUN_SNAIL_FILE_CMD, runSnailFile));
-	context.subscriptions.push(commands.registerCommand(DEBUG_SNAIL_FILE_CMD, debugSnailFile));
+	context.subscriptions.push(v.commands.registerCommand(RUN_SNAIL_FILE_CMD, runSnailFile));
+	context.subscriptions.push(v.commands.registerCommand(DEBUG_SNAIL_FILE_CMD, debugSnailFile));
 
 	// The server is implemented in node
 	const serverModule = context.asAbsolutePath(
@@ -52,27 +43,27 @@ export function activate(context: ExtensionContext) {
 
 	// If the extension is launched in debug mode then the debug server options are used
 	// Otherwise the run options are used
-	const serverOptions: ServerOptions = {
-		run: { module: serverModule, transport: TransportKind.ipc },
+	const serverOptions: lc.ServerOptions = {
+		run: { module: serverModule, transport: lc.TransportKind.ipc },
 		debug: {
 			module: serverModule,
-			transport: TransportKind.ipc,
+			transport: lc.TransportKind.ipc,
 			options: debugOptions
 		}
 	};
 
 	// Options to control the language client
-	const clientOptions: LanguageClientOptions = {
+	const clientOptions: lc.LanguageClientOptions = {
 		// Register the server for plain text documents
 		documentSelector: [{ scheme: 'file', language: 'snail' }],
 		synchronize: {
 			// Notify the server about file changes to '.clientrc files contained in the workspace
-			fileEvents: workspace.createFileSystemWatcher('**/.clientrc')
+			fileEvents: v.workspace.createFileSystemWatcher('**/.clientrc')
 		}
 	};
 
 	// Create the language client and start the client.
-	client = new LanguageClient(
+	client = new lc.LanguageClient(
 		'snailLanguageServer',
 		'Language Server for Snail',
 		serverOptions,
@@ -87,7 +78,7 @@ function validateSnailPath(path : string) {
 	let error_code : string = "ERROR";
 	let success_code : string = "OK";
 	try {
-		fs.accessSync(path, fs.constants.F_OK);
+		f.accessSync(path, f.constants.F_OK);
 	} catch (err) {
 		let message : string = "File path to snail doesn't exist: " + path;
 		return {
@@ -98,7 +89,7 @@ function validateSnailPath(path : string) {
 	}
 
 	try {
-		fs.accessSync(path, fs.constants.X_OK);
+		f.accessSync(path, f.constants.X_OK);
 	} catch (err) {
 		let message = "User does not have execute privelege on snail path: " + path;
 		return {
@@ -134,23 +125,23 @@ function validateSnailPath(path : string) {
 
 function runSnailFile() {
 	if (snailTerminal === undefined) {
-		snailTerminal = window.createTerminal("Snail");
+		snailTerminal = v.window.createTerminal("Snail");
 	}
 	snailTerminal.show();
 
-	const filePath : String | undefined = window.activeTextEditor?.document.fileName;
-	let snailPath : String = workspace.getConfiguration('snailLanguageServer').snailPath;
+	const filePath : String | undefined = v.window.activeTextEditor?.document.fileName;
+	let snailPath : String = v.workspace.getConfiguration('snailLanguageServer').snailPath;
 
 	snailTerminal.sendText(snailPath + ' ' + filePath)
 }
 
-function debugSnailFile(resource : vscode.Uri) {
+function debugSnailFile(resource : v.Uri) {
 	
-	if (!resource && vscode.window.activeTextEditor) {
-		resource = vscode.window.activeTextEditor.document.uri;
+	if (!resource && v.window.activeTextEditor) {
+		resource = v.window.activeTextEditor.document.uri;
 	}
 
-	let config : DebugConfiguration = {
+	let config : v.DebugConfiguration = {
 		name: "Launch Snail Debug",
 		request: "launch",
 		type: "snail",
@@ -158,7 +149,7 @@ function debugSnailFile(resource : vscode.Uri) {
 	};
 
 	// this line calls 'node client/out/debugAdapter.js'
-	debug.startDebugging(undefined, config);	
+	v.debug.startDebugging(undefined, config);	
 }
 
 export function deactivate(): Thenable<void> | undefined {
