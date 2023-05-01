@@ -1,65 +1,82 @@
-# snail-language-support README
+# Snail Language Support
 
-This is the README for your extension "snail-language-support". After writing up a brief description, we recommend including the following sections.
+The Snail Language Support aims to add language support for the [snail programming language](https://snail-language.github.io/), developed by Assistant Professor [Kevin Angstadt](https://myslu.stlawu.edu/~kangstadt/) at St. Lawrence University. 
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+Snail Language Support adds a number of features to the snail language
 
-For example if there is an image subfolder under your extension project workspace:
+### Static Error Checking
 
-\!\[feature X\]\(images/feature-x.png\)
+Snail Language Support provides static error checking of lexing and parsing errors. Runtime/Interpreter errors are currently not supported or checked.
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+![Static Error Checking](docs/images/StaticErrorChecking.png)
+
+### Rudimentary autocomplete
+
+Snail Language Support also provides basic autocomplete for common code structures, such as if statements, while loops, and variable definitions. To utilize this function, type the following prompts in a snail file, and press `tab` to select the appropriate autocomplete.
+
+For a more detailed description of intended outputs, see `snippets/snippets.json`
+
+| List of Snippet Prompts |
+| :-- |
+| `if` |
+| `while` |
+| `class` |
+| `class-inherits` |
+| `class M` * | 
+| `class m` * |
+| `main` * |
+| `Main` * |
+| `main-inherits` + |
+| `Main-inherits` + |
+| `method-def` |
+| `let` |
+| `let-def` |
+
+\* all equivalent prompts that give the following output
+```javascript
+	class Main {
+	    main() {
+			
+        };	
+	};
+```
+
+\+ both equivalent prompts that give the following output 
+```javascript
+	class Main : {
+	    main() {
+			
+        };	
+	};
+```
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+Snail Language Support requires an installation of snail of version 1.3.0 or greater. To check your version of snail, run the following command
+
+```bash
+snail -v 
+# OR, snail --version
+```
+
+If a snail interpreter is not found, or it has version <1.3.0, see installation instructions [here](https://snail-language.github.io/downloads).
 
 ## Extension Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+There are a few notable settings provided in this extension that are worth configuring prior to using this extension. 
 
-For example:
+* `snailLanguageServer.snailPath`: Absolute path to snail executable to use for Language Server. This is required for static error checking.
+* `snailLanguageServer.maxNumberOfProblems`: The maxmimum number of problems our language server is allowed to produce when looking at a single file. In practice, Snail Language Support's current implementation of a language server is unable to produce more than one problem.
+* `snailLanguageServer.trace.server`: Traces the communication between VS Code and the language server. Primarily for debugging purposes. `off`, `message`, or `verbose`
 
-This extension contributes the following settings:
+## Issues
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
+If you encounter an issue with the Snail Langauge Support extension (bug, feature request, or other), please open an issue on our Snail Language Support GitHub page. 
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
-
 ### 1.0.0
 
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+Initial release of Snail Language Support
