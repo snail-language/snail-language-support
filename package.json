@@ -3,7 +3,7 @@
   "displayName": "Snail Language Support",
   "publisher": "cprein19",
   "description": "Extension providing useful language support for the Snail programming language",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "engines": {
     "vscode": "^1.71.0"
   },
@@ -33,8 +33,8 @@
         ],
         "configuration": "./configurations/language-configuration.json",
         "icon": {
-          "light": "./icons/snail.png",
-          "dark": "./icons/snail.png"
+          "light": "./images/snail.png",
+          "dark": "./images/snail.png"
         }
       }
     ],
@@ -188,5 +188,13 @@
     "eslint": "^8.13.0",
     "mocha": "^9.2.1",
     "typescript": "^4.8.4"
+  },
+
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/snail-language/snail-language-support"
+  },
+  "bugs": {
+    "url": "https://github.com/snail-language/snail-language-support/issues"
   }
 }
