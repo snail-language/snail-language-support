@@ -42,7 +42,7 @@ For a more detailed description of intended outputs, see `snippets/snippets.json
 
 Currently, Snail Language Support is not available on the online VS Code extension marketplace. To install, please follow the instructions below.
 
-1. ensure that the `code` command is installed and usable on your machine. 
+1. Ensure that the `code` command is installed and usable on your machine. 
 
 ```bash
 code -v
@@ -109,6 +109,8 @@ There are a few known issues/bugs that you may encounter that are under plans fo
 There are a number of things that are helpful to know when starting development on this extension. They are noted below.
 
 ### Testing locally
+
+Currently, we have no automated testing process or testing scripts. As such, testing is limited to local testing and manually verifying that previous functionality still exists.
 
 ### Packaging Extension for distribution
 
