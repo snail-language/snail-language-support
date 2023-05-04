@@ -9,15 +9,11 @@
   },
   "categories": [
     "Programming Languages",
-    "Snippets",
-    "Debuggers"
+    "Snippets"
   ],
   "activationEvents": [
     "onLanguage:snail",
-    "onCommand:snail-language-support.runSnailFile",
-    "onCommand:snail-language-support.debugSnailFile",
-    "onDebug",
-    "onDebugResolve:snail"
+    "onCommand:snail-language-support.runSnailFile"
   ],
   "main": "./client/out/extension",
   "contributes": {
@@ -58,21 +54,10 @@
         "category": "Snail",
         "enablement": "!inDebugMode",
         "icon": "$(play)"
-      },
-      {
-        "command": "snail-language-support.debugSnailFile",
-        "title": "Debug Snail Program",
-        "category": "Snail",
-        "enablement": "!inDebugMode",
-        "icon": "$(debug-alt)"
       }
     ],
     "menus": {
       "commandPalette": [
-        {
-          "command": "snail-language-support.debugSnailFile",
-          "when": "resourceLangId == snail"
-        },
         {
           "command": "snail-language-support.runSnailFile",
           "when": "resourceLangId == snail"
@@ -83,11 +68,6 @@
           "command": "snail-language-support.runSnailFile",
           "when": "resourceLangId == snail",
           "group": "navigation@1"
-        },
-        {
-          "command": "snail-language-support.debugSnailFile",
-          "when": "resourceLangId == snail",
-          "group": "navigation@2"
         }
       ]
     },
@@ -123,51 +103,6 @@
     "breakpoints": [
       {
         "language": "snail"
-      }
-    ],
-    "debuggers": [
-      {
-        "type": "snail",
-        "label": "Snail Debugger",
-        
-        "languages": [
-          "snail"
-        ],
-
-        "program": "./client/out/debugAdapter.js",
-        "runtime": "node",
-        "args": [],
-        
-        "configurationAttributes": {
-          "launch": {
-            "required": ["program"],
-            "properties": {
-              "program": "string",
-              "description": "Path to a file to debug",
-              "default": "${workspaceFolder}/${file}"
-            }
-          }
-        },
-        "initialConfigurations": [
-            {
-              "type": "snail",
-              "request": "launch",
-              "name": "Debug Snail File from package.json",
-              "program": "${workspaceFolder}/${file}"
-            }
-        ],
-        "configurationSnippets": [
-          {
-            "label": "Snail Debug: Launch Snippet",
-            "description": "A new configuration for debugging a snail program",
-            "body": {
-              "type": "snail",
-              "request": "launch",
-              "name": "${2:Launch Program}",
-              "program": "^\"\\${workspaceFolder}/${1:Program}\""
-            }
-          }
-        ]
       }
     ]
   },
