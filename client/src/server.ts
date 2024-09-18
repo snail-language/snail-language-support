@@ -133,7 +133,7 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 
 	// create temp dir and temp file
 	const osTmpDir : string = os.tmpdir();
-	const tmpDir: string = f.mkdtempSync(path.join(osTmpDir));
+	const tmpDir: string = f.mkdtempSync(path.join(osTmpDir, "snail-lsp"));
 	const filename: string = path.join(tmpDir, 'tmp.sl');
 	f.writeFileSync(filename, text);
 	

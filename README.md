@@ -138,3 +138,7 @@ This should generate a `snail-language-support-1.x.x.vsix` file. Include this fi
 ### 1.0.0
 
 Initial release of Snail Language Support
+
+### 1.0.1
+
+Changed temporary directory for langauge server

@@ -3,7 +3,7 @@
   "displayName": "Snail Language Support",
   "publisher": "cprein19",
   "description": "Extension providing useful language support for the Snail programming language",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "engines": {
     "vscode": "^1.71.0"
   },
